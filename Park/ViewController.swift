@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import FirebaseAuth
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate  {
 
@@ -24,6 +25,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
 
     override func viewDidAppear(_ animated: Bool) {
+//        guard FIRAuth.auth()?.currentUser != nil else {
+//            performSegue(withIdentifier: "toLogin", sender: nil)
+//            return
+//        }
+//        force login screen to appear
+        performSegue(withIdentifier: "toLogin", sender: nil)
+
         locationAuthStatus()
     }
     
@@ -70,9 +78,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         return annotationView
     }
-    
-    
-    
     
     @IBAction func parkCarBtnPressed(_ sender: AnyObject) {
         let annotation = MKPointAnnotation()

@@ -15,5 +15,11 @@ class CustomCell: UITableViewCell {
     @IBOutlet weak var nickname: UILabel!
     
     @IBOutlet weak var licensePlate: UILabel!
+    
+    func configureCell(car: Car)
+    {
+        nickname.text = car.carId
+        licensePlate.text = car.licensePlate
+    }
 
 }
