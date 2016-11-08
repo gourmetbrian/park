@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="qj7-dj-5gh">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -196,6 +196,62 @@
             </objects>
             <point key="canvasLocation" x="116" y="143"/>
         </scene>
+        <!--SettingsVC-->
+        <scene sceneID="xno-BZ-qsj">
+            <objects>
+                <viewController id="qj7-dj-5gh" customClass="SettingsVC" customModule="Park" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="YGZ-6D-n6B"/>
+                        <viewControllerLayoutGuide type="bottom" id="FkS-2j-0TE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RBC-R9-L0Z">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="carbackground" translatesAutoresizingMaskIntoConstraints="NO" id="DaZ-8z-eb2"/>
+                            <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VyC-XF-frv">
+                                <color key="backgroundColor" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wEK-ku-X6A">
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="greentrabi" translatesAutoresizingMaskIntoConstraints="NO" id="Ilr-vb-fuK">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="2Kv-kp-var"/>
+                                            <constraint firstAttribute="height" constant="100" id="jeC-Eg-jDE"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="Ilr-vb-fuK" firstAttribute="top" secondItem="wEK-ku-X6A" secondAttribute="top" constant="80" id="0gu-NX-HJF"/>
+                                    <constraint firstItem="Ilr-vb-fuK" firstAttribute="centerX" secondItem="wEK-ku-X6A" secondAttribute="centerX" id="B4M-52-Oom"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="FkS-2j-0TE" firstAttribute="top" secondItem="VyC-XF-frv" secondAttribute="bottom" id="HgH-cj-LtG"/>
+                            <constraint firstItem="FkS-2j-0TE" firstAttribute="top" secondItem="wEK-ku-X6A" secondAttribute="bottom" id="Iu3-me-WvX"/>
+                            <constraint firstItem="DaZ-8z-eb2" firstAttribute="leading" secondItem="RBC-R9-L0Z" secondAttribute="leading" id="KAW-8W-epE"/>
+                            <constraint firstItem="wEK-ku-X6A" firstAttribute="leading" secondItem="RBC-R9-L0Z" secondAttribute="leading" id="N3h-lM-9Ah"/>
+                            <constraint firstItem="VyC-XF-frv" firstAttribute="top" secondItem="RBC-R9-L0Z" secondAttribute="top" id="ZMu-yv-8rt"/>
+                            <constraint firstItem="wEK-ku-X6A" firstAttribute="top" secondItem="RBC-R9-L0Z" secondAttribute="top" id="bfo-1R-c3C"/>
+                            <constraint firstItem="VyC-XF-frv" firstAttribute="leading" secondItem="RBC-R9-L0Z" secondAttribute="leading" id="ilx-8a-ajU"/>
+                            <constraint firstAttribute="trailing" secondItem="DaZ-8z-eb2" secondAttribute="trailing" id="k8P-7F-yaW"/>
+                            <constraint firstAttribute="trailing" secondItem="VyC-XF-frv" secondAttribute="trailing" id="lsU-jg-tuL"/>
+                            <constraint firstItem="FkS-2j-0TE" firstAttribute="top" secondItem="DaZ-8z-eb2" secondAttribute="bottom" id="tQ2-Wz-cpc"/>
+                            <constraint firstAttribute="trailing" secondItem="wEK-ku-X6A" secondAttribute="trailing" id="xQh-hI-Xih"/>
+                            <constraint firstItem="DaZ-8z-eb2" firstAttribute="top" secondItem="RBC-R9-L0Z" secondAttribute="top" id="yZY-4v-MQo"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="profileImage" destination="Ilr-vb-fuK" id="8M7-xV-HqO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nCx-Wn-ORM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1224.8" y="142.57871064467767"/>
+        </scene>
         <!--SettingsVC View Controller-->
         <scene sceneID="6gb-J1-gge">
             <objects>
@@ -224,7 +280,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="42" id="car-Dt-472"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="24"/>
+                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="24"/>
                                         <color key="textColor" red="0.77866586538461535" green="0.75669012621698872" blue="0.49762779532155099" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -238,7 +294,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Npa-Q2-opg">
                                         <frame key="frameInset" minX="20" minY="188" width="142" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
+                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="22"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -296,10 +352,10 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CustomCell" rowHeight="140" id="Yfl-sP-g1V" customClass="CustomCell" customModule="Park" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="1000" height="140"/>
+                                        <rect key="frame" x="0.0" y="28" width="375" height="140"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Yfl-sP-g1V" id="g2M-jx-ghF">
-                                            <frame key="frameInset" width="1000" height="140"/>
+                                            <frame key="frameInset" width="375" height="140"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MKU-fO-cXJ">
@@ -316,7 +372,7 @@
                                                                 <constraint firstAttribute="height" constant="37" id="8bF-9Y-04n"/>
                                                                 <constraint firstAttribute="width" constant="210" id="Twc-7N-FGO"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="24"/>
+                                                            <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="24"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -326,7 +382,7 @@
                                                                 <constraint firstAttribute="height" constant="37" id="Rh8-es-L6i"/>
                                                                 <constraint firstAttribute="width" constant="210" id="Wf6-7N-KpJ"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="24"/>
+                                                            <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="24"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -381,7 +437,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P9f-wF-RRx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="960.79999999999995" y="136.28185907046478"/>
+            <point key="canvasLocation" x="972" y="-627"/>
         </scene>
         <!--Add CarVC-->
         <scene sceneID="lCq-d7-yfL">
@@ -402,50 +458,61 @@
                                 </constraints>
                                 <state key="normal" title="Button" image="back"/>
                                 <connections>
-                                    <action selector="addCarDone:" destination="UDh-yc-Wzz" eventType="touchUpInside" id="2mV-bQ-3OC"/>
+                                    <action selector="carAddedDone:" destination="UDh-yc-Wzz" eventType="touchUpInside" id="vGk-Ig-SSr"/>
                                     <action selector="settingsDone:" destination="CnA-JT-c7e" eventType="touchUpInside" id="Zyl-Px-GRJ"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1Go-t4-R2h">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="303" id="2ar-wa-kom"/>
-                                    <constraint firstAttribute="height" constant="247" id="gck-Up-3kY"/>
+                                    <constraint firstAttribute="height" constant="145" id="6nh-z4-vVN"/>
+                                    <constraint firstAttribute="width" constant="165" id="mh7-kj-SSW"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WDh-6e-S5j" customClass="CustomButton" customModule="Park" customModuleProvider="target">
-                                <frame key="frameInset" minX="36" minY="597" width="303" height="50"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Nickname" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Djp-5N-SYF" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
+                                <frame key="frameInset" minX="28" minY="272" width="303" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="27"/>
-                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Save Car"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="10"/>
                                     </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nickname" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Djp-5N-SYF" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
-                                <frame key="frameInset" minX="36" minY="465" width="303" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                        <color key="value" red="0.81985176280000005" green="0.66998128150000003" blue="0.697555492" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
+                                        <color key="value" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="License Plate #" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XGe-u9-BT7" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
-                                <frame key="frameInset" minX="36" minY="503" width="303" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="License Plate #" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XGe-u9-BT7" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
+                                <frame key="frameInset" minX="28" minY="318" width="303" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" returnKeyType="done"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
+                                        <color key="value" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                        <color key="value" red="0.81985176282051286" green="0.66998128146082681" blue="0.69755549199530953" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
@@ -456,28 +523,56 @@
                                 </constraints>
                                 <state key="normal" image="garbage"/>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WDh-6e-S5j" customClass="CustomButton" customModule="Park" customModuleProvider="target">
+                                <frame key="frameInset" minX="28" minY="367" width="303" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="27"/>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Save Car"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="saveCarBtnPressed:" destination="UDh-yc-Wzz" eventType="touchUpInside" id="2az-oD-nF6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="BrV-wk-s0d" firstAttribute="leading" secondItem="W4B-tK-ceD" secondAttribute="leadingMargin" id="08Q-UG-nhD"/>
-                            <constraint firstItem="1Go-t4-R2h" firstAttribute="top" secondItem="am1-dE-B5S" secondAttribute="bottom" constant="24" id="Epj-17-oDx"/>
+                            <constraint firstItem="1Go-t4-R2h" firstAttribute="top" secondItem="am1-dE-B5S" secondAttribute="bottom" constant="32.5" id="Epj-17-oDx"/>
                             <constraint firstItem="BrV-wk-s0d" firstAttribute="top" secondItem="ehy-Ax-pNa" secondAttribute="bottom" id="Fdj-0Z-p8b"/>
                             <constraint firstAttribute="trailingMargin" secondItem="am1-dE-B5S" secondAttribute="trailing" constant="20" id="YaB-28-hxA"/>
-                            <constraint firstItem="1Go-t4-R2h" firstAttribute="centerX" secondItem="W4B-tK-ceD" secondAttribute="centerX" id="db4-YN-E6H"/>
-                            <constraint firstItem="1Go-t4-R2h" firstAttribute="centerY" secondItem="W4B-tK-ceD" secondAttribute="centerY" id="tlt-oW-IHR"/>
+                            <constraint firstItem="1Go-t4-R2h" firstAttribute="centerX" secondItem="W4B-tK-ceD" secondAttribute="centerX" constant="-17" id="db4-YN-E6H"/>
+                            <constraint firstItem="1Go-t4-R2h" firstAttribute="centerY" secondItem="W4B-tK-ceD" secondAttribute="centerY" constant="-161" id="tlt-oW-IHR"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="licensePlateTextField" destination="XGe-u9-BT7" id="PIw-Mo-KyD"/>
+                        <outlet property="nicknameTextField" destination="Djp-5N-SYF" id="CAw-Jr-Fws"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qQ2-z6-Je4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1696.8" y="136.28185907046478"/>
+            <point key="canvasLocation" x="1997.5999999999999" y="-375.56221889055473"/>
         </scene>
     </scenes>
     <resources>
         <image name="back" width="256" height="256"/>
         <image name="car" width="256" height="256"/>
+        <image name="carbackground" width="540" height="960"/>
         <image name="carsbangkok" width="540" height="960"/>
         <image name="garbage" width="256" height="256"/>
+        <image name="greentrabi" width="2048" height="1536"/>
         <image name="plus-symbol" width="256" height="256"/>
         <image name="settings" width="256" height="256"/>
     </resources>

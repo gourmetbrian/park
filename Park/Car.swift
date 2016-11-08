@@ -7,44 +7,30 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 struct Car {
-    private var _nickname: String
-    private var _latitude: Double?
-    private var _longitude: Double?
-    private var _licensePlate: String
-    
-    var nickname: String {
-        return _nickname
+    let key: String
+    let nickname: String
+    let licensePlate: String
+    let ref: FIRDatabaseReference?
+    let owner: String
+
+    init(nickname: String, licensePlate: String, owner: String, key: String = "") {
+        self.key = key
+        self.nickname = nickname
+        self.licensePlate = licensePlate
+        self.ref = nil
+        self.owner = owner
     }
     
-    var latitude: Double? {
-        set(newLatitude) {
-            _latitude = newLatitude
-        }
-        get {
-            return _latitude
-        }
-    }
-    
-    var longitude: Double? {
-        set(newLongitude) {
-            _longitude = newLongitude
-        }
-        get {
-            return _longitude
-        }
-    }
-    
-    var licensePlate: String {
-        return _licensePlate
-    }
-    
-    init(nickname: String, licensePlate: String) {
-        _nickname = nickname
-        _licensePlate = licensePlate
-        _longitude = nil
-        _latitude = nil
+    init(snapshot: FIRDataSnapshot) {
+        key = snapshot.key
+        let snapshotValue = snapshot.value as! [String: AnyObject]
+        nickname = snapshotValue["nickname"] as! String
+        licensePlate = snapshotValue["license"] as! String
+        owner = snapshotValue["owner"] as! String
+        ref = snapshot.ref
     }
 
 }

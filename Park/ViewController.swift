@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate  {
 
@@ -30,7 +31,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 //            return
 //        }
 //        force login screen to appear
-        performSegue(withIdentifier: "toLogin", sender: nil)
+//        performSegue(withIdentifier: "toLogin", sender: nil)
 
         locationAuthStatus()
     }
@@ -81,8 +82,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBAction func parkCarBtnPressed(_ sender: AnyObject) {
         let annotation = MKPointAnnotation()
-        annotation.coordinate = CLLocationCoordinate2D(latitude: mapview.centerCoordinate.latitude, longitude: mapview.centerCoordinate.longitude)
+        
+        let latitude = mapview.centerCoordinate.latitude
+        let longitude = mapview.centerCoordinate.longitude
+        annotation.coordinate = CLLocationCoordinate2D(latitude: latitude , longitude: longitude)
         mapview.addAnnotation(annotation)
+        
+        if let uid = DataService.instance.uid {
+            
+            let location = [ "latitude" : latitude,
+                             "longitude" : longitude]
+        DataService.instance.carsRef.child("\(uid)car").updateChildValues(location)
+        }
     }
     
     

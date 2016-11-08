@@ -8,6 +8,7 @@
 
 import Foundation
 import FirebaseDatabase
+import FirebaseAuth
 
 class DataService {
     private static let _instance = DataService()
@@ -24,10 +25,24 @@ class DataService {
         return mainRef.child("users")
     }
     
-    var usersCarRef: FIRDatabaseReference {
-        //this doesn't work right now, we need the child to only get the user's cars
-        return mainRef.child("users").child("uid").child("cars")
+    var carsRef: FIRDatabaseReference {
+        return mainRef.child("cars")
     }
+    
+    let uid = FIRAuth.auth()?.currentUser?.uid
+    
+    var currentUserId: FIRDatabaseReference {
+        return usersRef.child(uid!)
+    }
+    
+    
+//    var usersCarRef: FIRDatabaseReference {
+//        //this doesn't work right now, we need the child to only get the user's cars
+//        if let uid = self.uid {
+//            
+//        return mainRef.child("users").child(uid).child(<#T##pathString: String##String#>)
+//        }
+//    }
     
     func saveUser(uid: String) {
         let profile: Dictionary<String, Any> = ["firstName": "", "lastName": ""]
@@ -41,5 +56,6 @@ class DataService {
         mainRef.child("users").child(uid).child("profile").setValue(profile)
         
     }
+
     
 }
