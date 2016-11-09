@@ -155,17 +155,14 @@
                                     <constraint firstAttribute="width" constant="50" id="Mja-9d-qzl"/>
                                     <constraint firstAttribute="height" constant="50" id="ecm-5D-6kL"/>
                                 </constraints>
-                                <state key="normal" image="car"/>
-                                <connections>
-                                    <action selector="parkCarBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4ie-Jj-xwK"/>
-                                </connections>
+                                <state key="normal" image="car-outline"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZmT-vJ-nMa">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="PFR-n7-XVc"/>
-                                    <constraint firstAttribute="height" constant="50" id="PfI-y5-bHa"/>
+                                    <constraint firstAttribute="width" constant="30" id="PFR-n7-XVc"/>
+                                    <constraint firstAttribute="height" constant="30" id="PfI-y5-bHa"/>
                                 </constraints>
-                                <state key="normal" image="settings"/>
+                                <state key="normal" image="back"/>
                                 <connections>
                                     <segue destination="CnA-JT-c7e" kind="presentation" id="n6E-RN-zOV"/>
                                 </connections>
@@ -175,7 +172,7 @@
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Usl-a8-YRZ" secondAttribute="bottom" id="1d2-de-ifD"/>
                             <constraint firstItem="Usl-a8-YRZ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="3mJ-uI-RAj"/>
-                            <constraint firstItem="ZmT-vJ-nMa" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="9pP-Fc-Gf8"/>
+                            <constraint firstItem="ZmT-vJ-nMa" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" constant="-313" id="9pP-Fc-Gf8"/>
                             <constraint firstItem="E3r-rg-CwO" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="DAY-XA-yWb"/>
                             <constraint firstItem="Usl-a8-YRZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="RcL-Aq-lyx"/>
                             <constraint firstAttribute="trailing" secondItem="Usl-a8-YRZ" secondAttribute="trailing" id="VAC-mk-dNC"/>
@@ -189,7 +186,6 @@
                     </view>
                     <connections>
                         <outlet property="mapview" destination="Usl-a8-YRZ" id="VPD-h9-in6"/>
-                        <segue destination="mxy-bD-R5Y" kind="presentation" identifier="toLogin" id="xuv-N4-joL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -220,11 +216,66 @@
                                             <constraint firstAttribute="height" constant="100" id="jeC-Eg-jDE"/>
                                         </constraints>
                                     </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zV4-r4-pQP">
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="24"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mez-sd-Dmk">
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="24"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZQG-um-6z1">
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="24"/>
+                                        <state key="normal" title="find">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="BYZ-38-t0r" kind="presentation" identifier="toMapSegue" id="dLh-Ni-zU7"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bf5-cH-thJ">
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ie-ic-b6X">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Mv7-GD-hJS"/>
+                                            <constraint firstAttribute="width" constant="30" id="dKw-Bk-5dz"/>
+                                        </constraints>
+                                        <state key="normal" image="plus-white"/>
+                                        <connections>
+                                            <segue destination="UDh-yc-Wzz" kind="presentation" id="pgt-1p-NQv"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lrf-YR-Aom">
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="24"/>
+                                        <state key="normal" title="park">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="parkBtnPressed:" destination="qj7-dj-5gh" eventType="touchUpInside" id="X1u-1n-cIQ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="Ilr-vb-fuK" firstAttribute="top" secondItem="wEK-ku-X6A" secondAttribute="top" constant="80" id="0gu-NX-HJF"/>
                                     <constraint firstItem="Ilr-vb-fuK" firstAttribute="centerX" secondItem="wEK-ku-X6A" secondAttribute="centerX" id="B4M-52-Oom"/>
+                                    <constraint firstAttribute="trailing" secondItem="3ie-ic-b6X" secondAttribute="trailing" constant="8" id="MfI-PN-tej"/>
+                                    <constraint firstItem="3ie-ic-b6X" firstAttribute="top" secondItem="wEK-ku-X6A" secondAttribute="top" constant="46" id="Tg6-dr-p5V"/>
+                                    <constraint firstItem="Bf5-cH-thJ" firstAttribute="top" secondItem="wEK-ku-X6A" secondAttribute="top" constant="50" id="VQo-wf-NAw"/>
+                                    <constraint firstItem="ZQG-um-6z1" firstAttribute="leading" secondItem="wEK-ku-X6A" secondAttribute="leading" constant="40" id="b7d-JK-rXb"/>
+                                    <constraint firstItem="Mez-sd-Dmk" firstAttribute="top" secondItem="zV4-r4-pQP" secondAttribute="bottom" constant="25" id="cKY-dW-ktk"/>
+                                    <constraint firstAttribute="trailing" secondItem="lrf-YR-Aom" secondAttribute="trailing" constant="40" id="mhQ-Bd-eT5"/>
+                                    <constraint firstItem="lrf-YR-Aom" firstAttribute="top" secondItem="wEK-ku-X6A" secondAttribute="top" constant="585" id="os6-Ce-85J"/>
+                                    <constraint firstItem="ZQG-um-6z1" firstAttribute="top" secondItem="wEK-ku-X6A" secondAttribute="top" constant="585" id="qKk-y4-oHi"/>
+                                    <constraint firstItem="Mez-sd-Dmk" firstAttribute="centerX" secondItem="wEK-ku-X6A" secondAttribute="centerX" id="qNE-DF-22R"/>
+                                    <constraint firstItem="zV4-r4-pQP" firstAttribute="top" secondItem="Ilr-vb-fuK" secondAttribute="bottom" constant="25" id="wde-uf-PeM"/>
+                                    <constraint firstItem="Bf5-cH-thJ" firstAttribute="centerX" secondItem="wEK-ku-X6A" secondAttribute="centerX" id="yae-io-iyb"/>
+                                    <constraint firstItem="zV4-r4-pQP" firstAttribute="centerX" secondItem="wEK-ku-X6A" secondAttribute="centerX" id="ylQ-r7-eVX"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -245,7 +296,12 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="findBtn" destination="ZQG-um-6z1" id="L3k-ju-XOX"/>
+                        <outlet property="licensePlate" destination="Mez-sd-Dmk" id="2Gq-Tg-Kw3"/>
+                        <outlet property="nickname" destination="zV4-r4-pQP" id="CLv-Wa-fBC"/>
+                        <outlet property="parkBtn" destination="lrf-YR-Aom" id="XDU-aU-apL"/>
                         <outlet property="profileImage" destination="Ilr-vb-fuK" id="8M7-xV-HqO"/>
+                        <outlet property="userName" destination="Bf5-cH-thJ" id="L2Q-KJ-GpZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nCx-Wn-ORM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -304,9 +360,6 @@
                                             <constraint firstAttribute="height" constant="25" id="ZYH-xv-gmE"/>
                                         </constraints>
                                         <state key="normal" image="plus-symbol"/>
-                                        <connections>
-                                            <segue destination="UDh-yc-Wzz" kind="presentation" id="uK5-dc-LvQ"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.72549019609999998" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -451,109 +504,129 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BrV-wk-s0d">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="juu-aR-dzJ"/>
-                                    <constraint firstAttribute="width" constant="25" id="xi1-ye-rmf"/>
-                                </constraints>
-                                <state key="normal" title="Button" image="back"/>
-                                <connections>
-                                    <action selector="carAddedDone:" destination="UDh-yc-Wzz" eventType="touchUpInside" id="vGk-Ig-SSr"/>
-                                    <action selector="settingsDone:" destination="CnA-JT-c7e" eventType="touchUpInside" id="Zyl-Px-GRJ"/>
-                                </connections>
-                            </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1Go-t4-R2h">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="145" id="6nh-z4-vVN"/>
-                                    <constraint firstAttribute="width" constant="165" id="mh7-kj-SSW"/>
-                                </constraints>
-                            </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Nickname" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Djp-5N-SYF" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
-                                <frame key="frameInset" minX="28" minY="272" width="303" height="30"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="steeringwheel" translatesAutoresizingMaskIntoConstraints="NO" id="vch-Z8-hJB"/>
+                            <view alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nwx-Ha-vcF">
+                                <frame key="frameInset" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" red="0.81985176280000005" green="0.66998128150000003" blue="0.697555492" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
-                                        <color key="value" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="License Plate #" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XGe-u9-BT7" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
-                                <frame key="frameInset" minX="28" minY="318" width="303" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" returnKeyType="done"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
-                                        <color key="value" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                        <color key="value" red="0.81985176282051286" green="0.66998128146082681" blue="0.69755549199530953" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="am1-dE-B5S">
+                                <color key="backgroundColor" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ao7-LK-7k0">
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1Go-t4-R2h">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="145" id="6nh-z4-vVN"/>
+                                            <constraint firstAttribute="width" constant="165" id="mh7-kj-SSW"/>
+                                        </constraints>
+                                    </imageView>
+                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="enter car nickname" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Djp-5N-SYF" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="fVS-Fc-MbW"/>
+                                            <constraint firstAttribute="width" constant="300" id="wNx-SS-g1V"/>
+                                        </constraints>
+                                        <color key="textColor" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                                <color key="value" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BrV-wk-s0d">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="25" id="juu-aR-dzJ"/>
+                                            <constraint firstAttribute="width" constant="25" id="xi1-ye-rmf"/>
+                                        </constraints>
+                                        <state key="normal" title="Button" image="back"/>
+                                        <connections>
+                                            <action selector="carAddedDone:" destination="UDh-yc-Wzz" eventType="touchUpInside" id="vGk-Ig-SSr"/>
+                                            <action selector="settingsDone:" destination="CnA-JT-c7e" eventType="touchUpInside" id="Zyl-Px-GRJ"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="enter car license plate #" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XGe-u9-BT7" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="spx-ge-0lF"/>
+                                        </constraints>
+                                        <color key="textColor" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" returnKeyType="done"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                                <color key="value" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                    <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WDh-6e-S5j" customClass="CustomButton" customModule="Park" customModuleProvider="target">
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="3Jt-L9-12Z"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                        <color key="tintColor" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="save car"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="saveCarBtnPressed:" destination="UDh-yc-Wzz" eventType="touchUpInside" id="2az-oD-nF6"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Yj0-qJ-RBV"/>
-                                    <constraint firstAttribute="width" constant="40" id="hUX-80-oyP"/>
+                                    <constraint firstItem="Djp-5N-SYF" firstAttribute="top" secondItem="1Go-t4-R2h" secondAttribute="bottom" constant="17" id="2HA-rc-6rk"/>
+                                    <constraint firstItem="1Go-t4-R2h" firstAttribute="top" secondItem="Ao7-LK-7k0" secondAttribute="top" constant="67" id="7QE-EH-soW"/>
+                                    <constraint firstItem="XGe-u9-BT7" firstAttribute="leading" secondItem="Ao7-LK-7k0" secondAttribute="leading" constant="36" id="Isu-pA-hEQ"/>
+                                    <constraint firstItem="BrV-wk-s0d" firstAttribute="leading" secondItem="Ao7-LK-7k0" secondAttribute="leadingMargin" id="Rnr-28-jhl"/>
+                                    <constraint firstItem="1Go-t4-R2h" firstAttribute="centerX" secondItem="Ao7-LK-7k0" secondAttribute="centerX" id="VmA-pQ-9bx"/>
+                                    <constraint firstItem="1Go-t4-R2h" firstAttribute="centerX" secondItem="Djp-5N-SYF" secondAttribute="centerX" id="bXl-b4-wVa"/>
+                                    <constraint firstItem="XGe-u9-BT7" firstAttribute="leading" secondItem="WDh-6e-S5j" secondAttribute="leading" id="bul-Ed-jv6"/>
+                                    <constraint firstItem="BrV-wk-s0d" firstAttribute="top" secondItem="Ao7-LK-7k0" secondAttribute="top" constant="20" id="cwG-gg-6it"/>
+                                    <constraint firstItem="1Go-t4-R2h" firstAttribute="centerX" secondItem="WDh-6e-S5j" secondAttribute="centerX" id="hc9-tX-bLZ"/>
+                                    <constraint firstItem="WDh-6e-S5j" firstAttribute="top" secondItem="XGe-u9-BT7" secondAttribute="bottom" constant="11" id="iai-h2-jEk"/>
+                                    <constraint firstItem="XGe-u9-BT7" firstAttribute="top" secondItem="Djp-5N-SYF" secondAttribute="bottom" constant="8" symbolic="YES" id="nTj-So-bRZ"/>
+                                    <constraint firstItem="1Go-t4-R2h" firstAttribute="centerX" secondItem="XGe-u9-BT7" secondAttribute="centerX" id="uKv-s1-96I"/>
                                 </constraints>
-                                <state key="normal" image="garbage"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WDh-6e-S5j" customClass="CustomButton" customModule="Park" customModuleProvider="target">
-                                <frame key="frameInset" minX="28" minY="367" width="303" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="27"/>
-                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Save Car"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="saveCarBtnPressed:" destination="UDh-yc-Wzz" eventType="touchUpInside" id="2az-oD-nF6"/>
-                                </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="BrV-wk-s0d" firstAttribute="leading" secondItem="W4B-tK-ceD" secondAttribute="leadingMargin" id="08Q-UG-nhD"/>
-                            <constraint firstItem="1Go-t4-R2h" firstAttribute="top" secondItem="am1-dE-B5S" secondAttribute="bottom" constant="32.5" id="Epj-17-oDx"/>
-                            <constraint firstItem="BrV-wk-s0d" firstAttribute="top" secondItem="ehy-Ax-pNa" secondAttribute="bottom" id="Fdj-0Z-p8b"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="am1-dE-B5S" secondAttribute="trailing" constant="20" id="YaB-28-hxA"/>
-                            <constraint firstItem="1Go-t4-R2h" firstAttribute="centerX" secondItem="W4B-tK-ceD" secondAttribute="centerX" constant="-17" id="db4-YN-E6H"/>
-                            <constraint firstItem="1Go-t4-R2h" firstAttribute="centerY" secondItem="W4B-tK-ceD" secondAttribute="centerY" constant="-161" id="tlt-oW-IHR"/>
+                            <constraint firstAttribute="trailing" secondItem="Ao7-LK-7k0" secondAttribute="trailing" id="1la-BX-Tep"/>
+                            <constraint firstItem="iDw-8j-Uw7" firstAttribute="top" secondItem="vch-Z8-hJB" secondAttribute="bottom" id="2bt-8J-2Oy"/>
+                            <constraint firstItem="Ao7-LK-7k0" firstAttribute="leading" secondItem="W4B-tK-ceD" secondAttribute="leading" id="J9o-qs-RGH"/>
+                            <constraint firstItem="Ao7-LK-7k0" firstAttribute="top" secondItem="W4B-tK-ceD" secondAttribute="top" id="Oba-vX-WhM"/>
+                            <constraint firstItem="iDw-8j-Uw7" firstAttribute="top" secondItem="Ao7-LK-7k0" secondAttribute="bottom" id="RDH-R8-XTM"/>
+                            <constraint firstItem="vch-Z8-hJB" firstAttribute="leading" secondItem="W4B-tK-ceD" secondAttribute="leading" id="ex1-yq-ZSZ"/>
+                            <constraint firstAttribute="trailing" secondItem="vch-Z8-hJB" secondAttribute="trailing" id="h6I-zu-XLC"/>
+                            <constraint firstItem="vch-Z8-hJB" firstAttribute="top" secondItem="W4B-tK-ceD" secondAttribute="top" id="pVj-p8-z6q"/>
                         </constraints>
                     </view>
                     <connections>
@@ -569,11 +642,12 @@
     <resources>
         <image name="back" width="256" height="256"/>
         <image name="car" width="256" height="256"/>
+        <image name="car-outline" width="512" height="512"/>
         <image name="carbackground" width="540" height="960"/>
         <image name="carsbangkok" width="540" height="960"/>
-        <image name="garbage" width="256" height="256"/>
         <image name="greentrabi" width="2048" height="1536"/>
         <image name="plus-symbol" width="256" height="256"/>
-        <image name="settings" width="256" height="256"/>
+        <image name="plus-white" width="512" height="512"/>
+        <image name="steeringwheel" width="1080" height="1920"/>
     </resources>
 </document>

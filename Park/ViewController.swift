@@ -14,6 +14,7 @@ import FirebaseDatabase
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate  {
 
     @IBOutlet weak var mapview: MKMapView!
+    var parkingSpot: ParkingSpot?
     
     let locationManager = CLLocationManager()
     
@@ -22,7 +23,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         mapview.delegate = self
-        mapview.userTrackingMode = MKUserTrackingMode.follow
+//        mapview.userTrackingMode = MKUserTrackingMode.follow
+        if let parkingSpotData = parkingSpot {
+            loadParkingSpotView()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -39,7 +43,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func locationAuthStatus()
     {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-            mapview.showsUserLocation = true;
+//            mapview.showsUserLocation = true;
         } else {
             locationManager.requestWhenInUseAuthorization()
         }
@@ -52,15 +56,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapview.setRegion(coordinateRegion, animated: true)
     }
     
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        //centers the map only if it hasn't been centered before
-        if let loc = userLocation.location {
-            if !mapHasCenteredOnce {
-                centerMapOnLocation(location: loc)
-                mapHasCenteredOnce = true
-            }
-        }
-    }
+//    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+//        //centers the map only if it hasn't been centered before
+//        if let loc = userLocation.location {
+//            if !mapHasCenteredOnce {
+//                centerMapOnLocation(location: loc)
+//                mapHasCenteredOnce = true
+//            }
+//        }
+//    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         //This creates a custom annotation
@@ -74,7 +78,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             annotationView?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         } else {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "Park")
-            annotationView?.image = UIImage(named: "car")
+            annotationView?.image = UIImage(named: "car-outline")
             annotationView?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         }
         return annotationView
@@ -96,6 +100,33 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
     }
     
+    func loadParkingSpotView() {
+        let latitude: CLLocationDegrees = (parkingSpot?.coordinate.latitude)!
+        
+        let longitude: CLLocationDegrees = (parkingSpot?.coordinate.longitude)!
+        
+        let lanDelta: CLLocationDegrees = 0.1
+        
+        let lonDelta: CLLocationDegrees = 0.1
+        
+        let span = MKCoordinateSpan(latitudeDelta: lanDelta, longitudeDelta: lonDelta)
+        
+        let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        
+        let region = MKCoordinateRegion(center: coordinates, span: span)
+        
+        mapview.setRegion(region, animated: true)
+        
+        let annotation = MKPointAnnotation()
+        
+        annotation.title = "Your car is parked here"
+        
+        annotation.subtitle = "Hold for directions"
+        
+        annotation.coordinate = (parkingSpot?.coordinate)!
+        
+        mapview.addAnnotation(annotation)
+    }
     
     
     
