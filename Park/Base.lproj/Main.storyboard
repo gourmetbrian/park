@@ -164,7 +164,7 @@
                                 </constraints>
                                 <state key="normal" image="back"/>
                                 <connections>
-                                    <segue destination="CnA-JT-c7e" kind="presentation" id="n6E-RN-zOV"/>
+                                    <action selector="dismissMapBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wRu-18-vjX"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -257,6 +257,7 @@
                                         </state>
                                         <connections>
                                             <action selector="parkBtnPressed:" destination="qj7-dj-5gh" eventType="touchUpInside" id="X1u-1n-cIQ"/>
+                                            <segue destination="BYZ-38-t0r" kind="presentation" id="msT-gW-NN9"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -650,4 +651,7 @@
         <image name="plus-white" width="512" height="512"/>
         <image name="steeringwheel" width="1080" height="1920"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="msT-gW-NN9"/>
+    </inferredMetricsTieBreakers>
 </document>

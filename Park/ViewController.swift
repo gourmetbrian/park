@@ -23,27 +23,33 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         mapview.delegate = self
-//        mapview.userTrackingMode = MKUserTrackingMode.follow
-        if let parkingSpotData = parkingSpot {
-            loadParkingSpotView()
-        }
+        mapview.userTrackingMode = MKUserTrackingMode.follow
+
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
 //        guard FIRAuth.auth()?.currentUser != nil else {
 //            performSegue(withIdentifier: "toLogin", sender: nil)
+
 //            return
 //        }
 //        force login screen to appear
 //        performSegue(withIdentifier: "toLogin", sender: nil)
-
+        
         locationAuthStatus()
+
+        if let parkingSpotData = parkingSpot {
+            loadParkingSpotView()
+        } else {
+            setUserParkedCar()
+        }
     }
     
     func locationAuthStatus()
     {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-//            mapview.showsUserLocation = true;
+            mapview.showsUserLocation = false;
         } else {
             locationManager.requestWhenInUseAuthorization()
         }
@@ -56,15 +62,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapview.setRegion(coordinateRegion, animated: true)
     }
     
-//    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-//        //centers the map only if it hasn't been centered before
-//        if let loc = userLocation.location {
-//            if !mapHasCenteredOnce {
-//                centerMapOnLocation(location: loc)
-//                mapHasCenteredOnce = true
-//            }
-//        }
-//    }
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        //centers the map only if it hasn't been centered before
+        if let loc = userLocation.location {
+            if !mapHasCenteredOnce {
+                centerMapOnLocation(location: loc)
+                mapHasCenteredOnce = true
+            }
+        }
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         //This creates a custom annotation
@@ -74,7 +80,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         if annotation.isKind(of: MKUserLocation.self) {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "User")
-            annotationView?.image = UIImage(named: "add")
+//            annotationView?.image = UIImage(named: "add")
             annotationView?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         } else {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "Park")
@@ -84,19 +90,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return annotationView
     }
     
-    @IBAction func parkCarBtnPressed(_ sender: AnyObject) {
-        let annotation = MKPointAnnotation()
-        
-        let latitude = mapview.centerCoordinate.latitude
-        let longitude = mapview.centerCoordinate.longitude
-        annotation.coordinate = CLLocationCoordinate2D(latitude: latitude , longitude: longitude)
-        mapview.addAnnotation(annotation)
-        
-        if let uid = DataService.instance.uid {
+    func setUserParkedCar() {
+        // mapview.userLocation.location
+        let userLoc = mapview.userLocation.location
+        if let loc = userLoc {
+            print(loc.coordinate.latitude)
+            let latitude: Double = (loc.coordinate.latitude)
+            let longitude: Double = (loc.coordinate.longitude)
+            let annotation = MKPointAnnotation()
             
-            let location = [ "latitude" : latitude,
-                             "longitude" : longitude]
-        DataService.instance.carsRef.child("\(uid)car").updateChildValues(location)
+            annotation.coordinate = CLLocationCoordinate2D(latitude: latitude , longitude: longitude)
+            mapview.addAnnotation(annotation)
+            
+            if let uid = DataService.instance.uid {
+                
+                let location = [ "latitude" : latitude,
+                                 "longitude" : longitude]
+                DataService.instance.carsRef.child("\(uid)car").updateChildValues(location)
+            }
+            mapview.addAnnotation(annotation)
         }
     }
     
@@ -105,9 +117,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         let longitude: CLLocationDegrees = (parkingSpot?.coordinate.longitude)!
         
-        let lanDelta: CLLocationDegrees = 0.1
+        let lanDelta: CLLocationDegrees = 0.001
         
-        let lonDelta: CLLocationDegrees = 0.1
+        let lonDelta: CLLocationDegrees = 0.001
         
         let span = MKCoordinateSpan(latitudeDelta: lanDelta, longitudeDelta: lonDelta)
         
@@ -129,7 +141,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     
-    
+    @IBAction func dismissMapBtn(_ sender: AnyObject) {
+        dismiss(animated: true, completion: nil)
+    }
 
 
 }
