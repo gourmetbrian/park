@@ -12,6 +12,7 @@
 		A9271DDF1DD10A1A0001AE7F /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9271DDE1DD10A1A0001AE7F /* SettingsVC.swift */; };
 		A9271DE11DD17DFD0001AE7F /* ParkingSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9271DE01DD17DFD0001AE7F /* ParkingSpot.swift */; };
 		A927DFD11DD182D0008B2B61 /* AddCarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A927DFD01DD182D0008B2B61 /* AddCarVC.swift */; };
+		A927DFD31DD6511D008B2B61 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A927DFD21DD6511D008B2B61 /* MainVC.swift */; };
 		A936FDD21DC7C160009D2752 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A936FDD11DC7C160009D2752 /* DataService.swift */; };
 		A936FDD41DC7C50C009D2752 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A936FDD31DC7C50C009D2752 /* User.swift */; };
 		A936FDD61DC80FD5009D2752 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = A936FDD51DC80FD5009D2752 /* Car.swift */; };
@@ -37,6 +38,7 @@
 		A9271DDE1DD10A1A0001AE7F /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		A9271DE01DD17DFD0001AE7F /* ParkingSpot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingSpot.swift; sourceTree = "<group>"; };
 		A927DFD01DD182D0008B2B61 /* AddCarVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCarVC.swift; sourceTree = "<group>"; };
+		A927DFD21DD6511D008B2B61 /* MainVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		A936FDD11DC7C160009D2752 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		A936FDD31DC7C50C009D2752 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		A936FDD51DC80FD5009D2752 /* Car.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				A927DFD01DD182D0008B2B61 /* AddCarVC.swift */,
 				A9BB91FC1DC2E98E00658522 /* LoginVC.swift */,
 				A9271DDE1DD10A1A0001AE7F /* SettingsVC.swift */,
+				A927DFD21DD6511D008B2B61 /* MainVC.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9BB91FD1DC2E98E00658522 /* LoginVC.swift in Sources */,
+				A927DFD31DD6511D008B2B61 /* MainVC.swift in Sources */,
 				A927DFD11DD182D0008B2B61 /* AddCarVC.swift in Sources */,
 				A95AA11B1DBB894D00E23D23 /* Park.xcdatamodeld in Sources */,
 				A9BB92011DC2F19600658522 /* CustomButton.swift in Sources */,

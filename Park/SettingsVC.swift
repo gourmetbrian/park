@@ -36,8 +36,8 @@ class SettingsVC: UIViewController {
                 //print(snapshot.debugDescription)
                 if snapshot.exists() {
                     self.usercar = Car(snapshot: snapshot)
-                    self.nickname.text = self.usercar?.nickname
-                    self.licensePlate.text = self.usercar?.licensePlate
+//                    self.nickname.text = self.usercar?.nickname
+//                    self.licensePlate.text = self.usercar?.licensePlate
                     self.userName.text = "brian's car"
                     if snapshot.hasChild("latitude") {
                         self.userParkingSpot = ParkingSpot(snapshot: snapshot)

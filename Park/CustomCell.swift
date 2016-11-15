@@ -18,8 +18,8 @@ class CustomCell: UITableViewCell {
     
     func configureCell(car: Car)
     {
-        nickname.text = car.nickname
-        licensePlate.text = car.licensePlate
+//        nickname.text = car.nickname
+//        licensePlate.text = car.licensePlate
     }
 
 }

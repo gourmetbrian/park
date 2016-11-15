@@ -30,7 +30,7 @@ class SettingsVCViewController: UIViewController, UITableViewDataSource, UITable
                 //print(snapshot.debugDescription)
                 if snapshot.exists() {
                     self.userCar = Car(snapshot: snapshot)
-                    print(self.userCar?.nickname)
+//                    print(self.userCar?.nickname)
                     self.tableView.reloadData()
                 }
             })
