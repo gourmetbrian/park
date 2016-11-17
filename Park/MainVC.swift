@@ -16,6 +16,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     var usercar: Car?
     var userParkingSpot: ParkingSpot?
     var annotation: MKAnnotation?
+    var streetAddressMark: CLPlacemark?
 
     @IBOutlet weak var streetAddress: UILabel!
     @IBOutlet weak var mapview: MKMapView!
@@ -29,15 +30,18 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mapview.delegate = self
         mapview.userTrackingMode = MKUserTrackingMode.follow
         
+        setAddressLabels()
+        
         if let uid = DataService.instance.uid {
             let currentUsersCarKey = "\(uid)car"
             DataService.instance.carsRef.child(currentUsersCarKey).observe(.value, with: { (snapshot) in
-                //print(snapshot.debugDescription)
                 if snapshot.exists() {
                     self.usercar = Car(snapshot: snapshot)
                     if snapshot.hasChild("latitude") {
                         self.loadSavedUserCarLocation()
                         self.userParkingSpot = ParkingSpot(snapshot: snapshot)
+                        let location: CLLocation = CLLocation(latitude: (self.userParkingSpot?.coordinate.latitude)!, longitude: (self.userParkingSpot?.coordinate.longitude)!)
+                        self.convertParkingSpotToAddress(location: location)
                     }
                     self.checkParkingStatus()
                 }
@@ -132,6 +136,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
         }
         mapview.removeAnnotations(mapview.annotations)
+        setAddressLabels()
     }
     
     func checkParkingStatus()
@@ -180,5 +185,39 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 //        return renderer
 //    }
 
+    func convertParkingSpotToAddress(location: CLLocation)
+    {
+        CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+            print(location)
+            
+            if error != nil {
+                print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                return
+            }
+            
+            if (placemarks?.count)! > 0 {
+                let pm = placemarks?[0] as CLPlacemark!
+                self.streetAddressMark = pm
+                print("####################\n####################\n##########")
+                print(self.streetAddressMark.debugDescription)
+                self.setAddressLabels()
+            }
+            else {
+                print("Problem with the data received from geocoder")
+            }
+        })
+    }
+    
+    
+    func setAddressLabels()
+    {
+        if let locality = streetAddressMark?.locality, let street = streetAddressMark?.thoroughfare, let streetnumber = streetAddressMark?.subThoroughfare, let state = streetAddressMark?.administrativeArea, let zip = streetAddressMark?.postalCode {
+            streetAddress.text = "\(streetnumber) \(street)"
+             cityAddress.text = "\(locality), \(state) \(zip)"
+        } else {
+            streetAddress.text = ""
+            cityAddress.text = ""
+        }
+    }
 
 }
