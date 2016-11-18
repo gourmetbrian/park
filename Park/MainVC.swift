@@ -10,12 +10,17 @@ import UIKit
 import MapKit
 import FirebaseAuth
 import FirebaseDatabase
+import UserNotifications
 
 class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     var usercar: Car?
     var userParkingSpot: ParkingSpot?
     var annotation: MKAnnotation?
+    @IBOutlet weak var timerLabel: UILabel!
+    var remainingTicks: Int = 0
+    var timer: Timer?
+
     var streetAddressMark: CLPlacemark?
 
     @IBOutlet weak var streetAddress: UILabel!
@@ -137,6 +142,9 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         }
         mapview.removeAnnotations(mapview.annotations)
         setAddressLabels()
+        timer?.invalidate()
+        timer = nil
+        timerLabel.text = ""
     }
     
     func checkParkingStatus()
@@ -219,5 +227,113 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             cityAddress.text = ""
         }
     }
+    
+    
+    @IBAction func meterBtnPressed(_ sender: AnyObject) {
+        //launch alertcontroller to accept time
+        registerLocal()
+        promptUserForMeterTime()
+        
+        
+    }
+    
+    func promptUserForMeterTime()
+    {
+        let alertController = UIAlertController(title: "Add Meter Time", message: "Set timer for meter", preferredStyle: UIAlertControllerStyle.alert)
+        
+        let submitAction = UIAlertAction(title: "Set Timer", style: UIAlertActionStyle.default, handler: {
+            alert -> Void in
+            
+            if let task = Int((alertController.textFields?.first?.text)!) {
+                self.remainingTicks = task * 60
+            }
+            self.startCountdown()
+            self.scheduleLocal()
+
+            alertController.dismiss(animated: true, completion: {
+            })
+        })
+        
+        alertController.addTextField { (textField : UITextField!) -> Void in
+            textField.placeholder = "Enter time for reminder"
+        }
+        alertController.addAction(submitAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func createTimeStamp() -> String        {
+            let date = Date()
+            let formatter = DateFormatter()
+            formatter.dateStyle = DateFormatter.Style.long
+            formatter.timeStyle = DateFormatter.Style.medium
+            return formatter.string(from: date)
+        }
+    
+    func startCountdown()
+    {
+        if (timer != nil) {
+            return
+        }
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(MainVC.decreaseTimer), userInfo: nil, repeats: true)
+    }
+    
+    func decreaseTimer()
+    {
+        remainingTicks -= 1
+        updateDisplay()
+        
+        if remainingTicks == 0 {
+            timerLabel.text = ""
+            timer?.invalidate()
+            timer = nil
+        }
+    }
+
+    func updateDisplay()
+    {
+        let mins: String = String(format: "%02d", remainingTicks / 60)
+        let secs: String = String(format: "%02d", remainingTicks % 60)
+        timerLabel.text = "\(mins):\(secs)"
+    }
+    
+    func registerLocal()
+    {
+        let center = UNUserNotificationCenter.current()
+        
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                print("Yay!")
+            } else {
+                print("D'oh")
+            }
+        }
+    }
+    
+    func scheduleLocal()
+    {
+//        registerCategories()
+        let center = UNUserNotificationCenter.current()
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Your meter has expired"
+        content.body = "It's time to go feed the meter or move your car."
+        content.categoryIdentifier = "alarm"
+        content.userInfo = ["customData": "fizzbuzz"]
+        content.sound = UNNotificationSound.default()
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = 10
+        dateComponents.minute = 30
+        //        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(self.remainingTicks), repeats: false)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        center.add(request)
+        
+    }
+
+
 
 }
