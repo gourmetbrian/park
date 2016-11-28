@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6C866CA19BAB2FF285D1F3AA /* Pods_Park.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 976CEB28FA7D1830A674CC51 /* Pods_Park.framework */; };
+		A9081BE81DEC83A6001A26FA /* NotesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9081BE71DEC83A6001A26FA /* NotesVC.swift */; };
+		A9081BEB1DEC978A001A26FA /* CustomTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9081BEA1DEC978A001A26FA /* CustomTextView.swift */; };
 		A90BBAA21DC2E43F0078BABB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A90BBAA11DC2E43F0078BABB /* GoogleService-Info.plist */; };
 		A9271DE11DD17DFD0001AE7F /* ParkingSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9271DE01DD17DFD0001AE7F /* ParkingSpot.swift */; };
 		A927DFD31DD6511D008B2B61 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A927DFD21DD6511D008B2B61 /* MainVC.swift */; };
@@ -31,6 +33,8 @@
 /* Begin PBXFileReference section */
 		24E1153130103EB21781893D /* Pods-Park.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Park.release.xcconfig"; path = "Pods/Target Support Files/Pods-Park/Pods-Park.release.xcconfig"; sourceTree = "<group>"; };
 		976CEB28FA7D1830A674CC51 /* Pods_Park.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Park.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9081BE71DEC83A6001A26FA /* NotesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotesVC.swift; sourceTree = "<group>"; };
+		A9081BEA1DEC978A001A26FA /* CustomTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTextView.swift; sourceTree = "<group>"; };
 		A90BBAA11DC2E43F0078BABB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A9271DE01DD17DFD0001AE7F /* ParkingSpot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkingSpot.swift; sourceTree = "<group>"; };
 		A927DFD21DD6511D008B2B61 /* MainVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
@@ -143,6 +147,7 @@
 			children = (
 				A9BB91FC1DC2E98E00658522 /* LoginVC.swift */,
 				A927DFD21DD6511D008B2B61 /* MainVC.swift */,
+				A9081BE71DEC83A6001A26FA /* NotesVC.swift */,
 				A92F69EC1DE34A64001DAE56 /* DatePickerVC.swift */,
 			);
 			name = Controllers;
@@ -154,6 +159,7 @@
 				A95AA12E1DBDA21C00E23D23 /* CustomCell.swift */,
 				A9BB91FE1DC2EE2100658522 /* CustomTextField.swift */,
 				A9BB92001DC2F19600658522 /* CustomButton.swift */,
+				A9081BEA1DEC978A001A26FA /* CustomTextView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -293,6 +299,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9BB91FD1DC2E98E00658522 /* LoginVC.swift in Sources */,
+				A9081BE81DEC83A6001A26FA /* NotesVC.swift in Sources */,
 				A927DFD31DD6511D008B2B61 /* MainVC.swift in Sources */,
 				A95AA11B1DBB894D00E23D23 /* Park.xcdatamodeld in Sources */,
 				A9BB92011DC2F19600658522 /* CustomButton.swift in Sources */,
@@ -301,6 +308,7 @@
 				A936FDD41DC7C50C009D2752 /* User.swift in Sources */,
 				A99D80591DC7BED300D99E95 /* KeyboardDismissalExtension.swift in Sources */,
 				A95AA12F1DBDA21C00E23D23 /* CustomCell.swift in Sources */,
+				A9081BEB1DEC978A001A26FA /* CustomTextView.swift in Sources */,
 				A99678161DC6D2D10059611E /* AuthService.swift in Sources */,
 				A95AA1131DBB894D00E23D23 /* AppDelegate.swift in Sources */,
 				A9BB91FF1DC2EE2100658522 /* CustomTextField.swift in Sources */,

@@ -449,7 +449,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             content.title = "Your meter has expired"
             content.body = "It's time to go feed the meter or move your car."
             content.categoryIdentifier = "alarm"
-            content.userInfo = ["customData": "fizzbuzz"]
+            content.userInfo = ["customData": "fizzbuzz"] //TODO: What is this?
             content.sound = UNNotificationSound.default()
             
             var dateComponents = DateComponents()
