@@ -32,19 +32,14 @@ class DatePickerVC: UIViewController {
     {
         let alertController = UIAlertController(title: "Unusable Time", message: "You must select a time in the future", preferredStyle: UIAlertControllerStyle.alert)
         
-        let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {
-            alert -> Void in
-        })
-        
+        let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
         alertController.addAction(submitAction)
-        
         self.present(alertController, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "segueToMainVC" {
             let mainVC = segue.destination as! MainVC
-            
             mainVC.meterExpirationDate = datePicker.date
         }
     }

@@ -82,22 +82,40 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         //set listener for when app goes to background
         
         //Schedule a local notification if this happens
+        
         notificationCenter.addObserver(self, selector: #selector(userResignedAppWhileCarIsParked), name: Notification.Name.UIApplicationWillResignActive, object: nil)
         
-        notificationCenter.addObserver(self, selector: #selector(userReopenedAppWhileCarisParked), name: Notification.Name.UIApplicationDidBecomeActive, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(userReopenedAppWhileCarisParked), name: Notification.Name.UIApplicationWillEnterForeground, object: nil)
+        
+        
         
         updateGUIForParkState()
+        if (meterExpirationDate != nil) {
+            registerLocal()
+            calculateMeterExpiration()
+            startCountdown()
+            print(remainingTicks)
+        }
         
     }
     
     func setup()
     {
         setAddressLabels()
+        print("ViewDidLoad was called.")
 
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        //This prevents multiple observers calling userResignedAppWhileCarIsParked from firing
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         locationAuthStatus()
+        print("ViewDidAppear was called.")
+
     }
 
     func locationAuthStatus()
@@ -271,7 +289,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             streetAddress.text = "\(streetnumber) \(street)"
              cityAddress.text = "\(locality), \(state) \(zip)"
         } else {
-            streetAddress.text = ""
+            streetAddress.text = "Park your car to use."
             cityAddress.text = ""
         }
     }
@@ -325,22 +343,20 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     //MARK: - Meter Setup and update
     
-    @IBAction func meterBtnPressed(_ sender: AnyObject) {
-        //TODO: launch alertcontroller to accept time
-        registerLocal()
-//        promptUserForMeterTime()
-        scheduleLocal()
-        calculateMeterExpiration()
-        startCountdown()
-        
-       //The below is all debug stuff
-        let alertController = UIAlertController(title: "Timer Set", message: "", preferredStyle: UIAlertControllerStyle.alert)
-        let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
-            alert -> Void in
-        })
-        alertController.addAction(submitAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
+//    @IBAction func meterBtnPressed(_ sender: AnyObject) {
+//        registerLocal()
+//        scheduleLocal()
+//        calculateMeterExpiration()
+//        startCountdown()
+//        
+//       //The below is all debug stuff
+//        let alertController = UIAlertController(title: "Timer Set", message: "", preferredStyle: UIAlertControllerStyle.alert)
+//        let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+//            alert -> Void in
+//        })
+//        alertController.addAction(submitAction)
+//        self.present(alertController, animated: true, completion: nil)
+//    }
     
     func promptUserForMeterTime()
     {
@@ -384,22 +400,31 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     func decreaseTimer()
     {
-        remainingTicks -= 1
-        updateDisplay()
         
-        if remainingTicks <= 0 {
-            timerLabel.text = ""
-            timer?.invalidate()
-            timer = nil
-            meterExpirationDate = nil
-        }
+            self.remainingTicks -= 1
+            self.updateDisplay()
+            print(self.remainingTicks)
+            
+            
+            if self.remainingTicks <= 0 {
+                self.timerLabel.text = ""
+                self.timer?.invalidate()
+                self.timer = nil
+                self.meterExpirationDate = nil
+            }
+        
     }
 
     func updateDisplay()
     {
-        let mins: String = String(format: "%02d", remainingTicks / 60)
-        let secs: String = String(format: "%02d", remainingTicks % 60)
-        timerLabel.text = "\(mins):\(secs)"
+       
+        let mins: String = String(format: "%02d", self.remainingTicks / 60)
+        let secs: String = String(format: "%02d", self.remainingTicks % 60)
+        DispatchQueue.main.async {
+            self.timerLabel.text = "\(mins):\(secs)"
+            self.timerLabel.setNeedsDisplay()
+        }
+        
     }
     
     func registerLocal()
@@ -428,10 +453,13 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             content.sound = UNNotificationSound.default()
             
             var dateComponents = DateComponents()
+            let newDate = UserDefaults.standard.object(forKey:"meterExpirationDateUserDefaults") as? Date ?? nil
+            if (newDate != nil) {
             let hour = Calendar.current.component(.hour, from: meterExpirationDate!)
             let minute = Calendar.current.component(.minute, from: meterExpirationDate!)
             dateComponents.hour = hour
             dateComponents.minute = minute
+        
             print("You set notification to go off at \(hour):\(minute)")
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
             
@@ -439,6 +467,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             center.add(request)
+                }
         
         
     }
@@ -469,8 +498,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     func userResignedAppWhileCarIsParked()
     {
         UserDefaults.standard.set(meterExpirationDate, forKey: "meterExpirationDateUserDefaults")
-        
-        //TODO then we need to calculate when the meter will expire and fire a localnotification for that date!
+        scheduleLocal()
         if (timer != nil) {
         timer?.invalidate()
         timer = nil
@@ -480,6 +508,8 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     func userReopenedAppWhileCarisParked()
     {
+        
+        //TODO: remove this and put it all in ViewDidLoad for debug porpoises
         let newDate = UserDefaults.standard.object(forKey:"meterExpirationDateUserDefaults") as? Date ?? nil
         
         if newDate != nil {
@@ -499,7 +529,6 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         if let _ = meterExpirationDate {
             let now = Date()
             remainingTicks = -(Int(now.timeIntervalSince(meterExpirationDate!)))
-            print(remainingTicks)
         }
     }
     
