@@ -228,6 +228,9 @@
                                                 <real key="value" value="8"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <segue destination="fhL-95-T9y" kind="presentation" id="4G6-WF-Wq5"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HrK-QV-mho" customClass="CustomButton" customModule="Park" customModuleProvider="target">
                                         <rect key="frame" x="272" y="141" width="73" height="66"/>
@@ -328,6 +331,88 @@
             </objects>
             <point key="canvasLocation" x="3320.8000000000002" y="-372.86356821589209"/>
         </scene>
+        <!--NotesVC-->
+        <scene sceneID="Bfu-qd-KCo">
+            <objects>
+                <viewController id="fhL-95-T9y" customClass="NotesVC" customModule="Park" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9ZR-j7-LrZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="sTX-eq-fFu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Fkw-IL-zmz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7x6-Hi-mzv">
+                                <rect key="frame" x="0.0" y="70" width="375" height="597"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="notesCell" id="fEu-4C-fMh" customClass="CustomCell" customModule="Park" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fEu-4C-fMh" id="8u1-1t-JCS">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="inset">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="14G-K6-bm3">
+                                <rect key="frame" x="0.0" y="20" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="lEz-3Z-Kzm"/>
+                                    <constraint firstAttribute="width" constant="30" id="lVm-c1-vtt"/>
+                                </constraints>
+                                <state key="normal" image="back"/>
+                                <connections>
+                                    <action selector="backBtnPressed:" destination="fhL-95-T9y" eventType="touchUpInside" id="9eP-nH-ZAA"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FEG-la-Zn7" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
+                                <rect key="frame" x="42" y="21" width="274" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kBQ-fd-kBa">
+                                <rect key="frame" x="336" y="21" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="9eV-51-RpR"/>
+                                    <constraint firstAttribute="width" constant="30" id="bCZ-RF-nYS"/>
+                                </constraints>
+                                <state key="normal" image="plus-symbol"/>
+                                <connections>
+                                    <action selector="addBtnPressed:" destination="fhL-95-T9y" eventType="touchUpInside" id="JKS-Tm-uPt"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="7x6-Hi-mzv" secondAttribute="trailing" id="0wR-eF-sY6"/>
+                            <constraint firstItem="7x6-Hi-mzv" firstAttribute="bottom" secondItem="sTX-eq-fFu" secondAttribute="top" id="JZ3-zy-ggL"/>
+                            <constraint firstItem="14G-K6-bm3" firstAttribute="leading" secondItem="Fkw-IL-zmz" secondAttribute="leadingMargin" constant="-16" id="KlH-Yc-75c"/>
+                            <constraint firstItem="7x6-Hi-mzv" firstAttribute="top" secondItem="kBQ-fd-kBa" secondAttribute="bottom" constant="19" id="Lbu-BT-Hsr"/>
+                            <constraint firstAttribute="trailing" secondItem="kBQ-fd-kBa" secondAttribute="trailing" constant="9" id="NzN-Qh-ey7"/>
+                            <constraint firstItem="kBQ-fd-kBa" firstAttribute="top" secondItem="Fkw-IL-zmz" secondAttribute="top" constant="21" id="PBC-uH-9pr"/>
+                            <constraint firstItem="7x6-Hi-mzv" firstAttribute="leading" secondItem="Fkw-IL-zmz" secondAttribute="leadingMargin" constant="-16" id="W6n-dX-Tas"/>
+                            <constraint firstItem="14G-K6-bm3" firstAttribute="top" secondItem="Fkw-IL-zmz" secondAttribute="topMargin" constant="20" id="vQO-8E-U5b"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="newNoteField" destination="FEG-la-Zn7" id="vpv-WS-dIh"/>
+                        <outlet property="tableView" destination="7x6-Hi-mzv" id="aW7-HB-ypR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xpa-kF-ZOv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3320.8000000000002" y="338.68065967016497"/>
+        </scene>
         <!--Date PickerVC-->
         <scene sceneID="Yhy-CP-cBz">
             <objects>
@@ -375,6 +460,9 @@
                                     <constraint firstAttribute="width" constant="30" id="QkG-8f-cye"/>
                                 </constraints>
                                 <state key="normal" title="Button" image="back"/>
+                                <connections>
+                                    <action selector="backBtnPressed:" destination="jB5-bc-nZP" eventType="touchUpInside" id="ZRP-BJ-3o4"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -396,5 +484,6 @@
         <image name="back" width="256" height="256"/>
         <image name="car-outline" width="512" height="512"/>
         <image name="carsbangkok" width="540" height="960"/>
+        <image name="plus-symbol" width="256" height="256"/>
     </resources>
 </document>

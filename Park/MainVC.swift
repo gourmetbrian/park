@@ -204,6 +204,8 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             let key = "\(uid)car"
             DataService.instance.carsRef.child("\(key)/latitude").setValue(nil)
             DataService.instance.carsRef.child("\(key)/longitude").setValue(nil)
+            DataService.instance.carsRef.child("\(key)/notes").setValue(nil)
+
         }
         mapview.removeAnnotations(mapview.annotations)
         setAddressLabels()
@@ -382,13 +384,13 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func createTimeStamp() -> String        {
-            let date = Date()
-            let formatter = DateFormatter()
-            formatter.dateStyle = DateFormatter.Style.long
-            formatter.timeStyle = DateFormatter.Style.medium
-            return formatter.string(from: date)
-        }
+//    func createTimeStamp() -> String        {
+//            let date = Date()
+//            let formatter = DateFormatter()
+//            formatter.dateStyle = DateFormatter.Style.long
+//            formatter.timeStyle = DateFormatter.Style.medium
+//            return formatter.string(from: date)
+//        }
     
     func startCountdown()
     {
@@ -449,7 +451,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             content.title = "Your meter has expired"
             content.body = "It's time to go feed the meter or move your car."
             content.categoryIdentifier = "alarm"
-            content.userInfo = ["customData": "fizzbuzz"]
+            content.userInfo = ["customData": "fizzbuzz"] //TODO: What is this?
             content.sound = UNNotificationSound.default()
             
             var dateComponents = DateComponents()
