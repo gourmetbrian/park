@@ -13,8 +13,6 @@ class DatePickerVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
 
@@ -44,5 +42,8 @@ class DatePickerVC: UIViewController {
         }
     }
 
+    @IBAction func backBtnPressed(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
 
 }

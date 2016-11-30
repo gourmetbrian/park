@@ -13,7 +13,7 @@ import FirebaseDatabase
 
 class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    @IBOutlet weak var newNote: UITextView!
+    @IBOutlet weak var newNoteField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     var activeRow: Int = 0
     let DEFAULT_NOTE_TEXT = "Enter note here..."
@@ -24,20 +24,12 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-
-        
-        //TODO: - implement custom text view so text deletes on selection
-        
-//        loadFirebaseNotes()
-
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setObserver()
-        
-
+        newNoteField.placeholder = DEFAULT_NOTE_TEXT
     }
     
     //MARK: - Table View Source and Delegate
@@ -64,8 +56,16 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
-    @IBAction func saveBtnPressed(_ sender: Any) {
-        let textToSave = newNote.text
+    //MARK:- Button functions
+    
+
+
+    @IBAction func backBtnPressed(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func addBtnPressed(_ sender: Any) {
+        let textToSave = newNoteField.text
         if (textToSave != DEFAULT_NOTE_TEXT && textToSave != nil && textToSave != "") {
             guard let uid = DataService.instance.uid else {
                 print("Cannot save data to Firebase at this time.")
@@ -76,35 +76,16 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             
             let newFBNote = [ date : textToSave! ] as [String : String]
             print(newFBNote)
-    
+            
             DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").updateChildValues(newFBNote)
-//            notes.append(textToSave!)
+            //            notes.append(textToSave!)
             tableView.reloadData()
-            newNote.text = DEFAULT_NOTE_TEXT
+            newNoteField.text = ""
+            newNoteField.placeholder = DEFAULT_NOTE_TEXT
             dismissKeyboard()
         }
     }
 
-    @IBAction func backBtnPressed(_ sender: Any) {
-    }
-    
-    func launchNoteDetailAlert(indexPath: IndexPath) {
-        
-        let noteForCell = notes[indexPath.row].value as? String
-        
-        let alertController = UIAlertController(title: "Note", message: noteForCell, preferredStyle: UIAlertControllerStyle.alert)
-        
-        let OK = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
-        let delete = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
-            self.deleteNote(indexPath: indexPath)
-            self.tableView.reloadData()
-        }
-        
-        alertController.addAction(OK)
-        alertController.addAction(delete)
-
-        self.present(alertController, animated: true, completion: nil)
-    }
     
     func deleteNote(indexPath: IndexPath)
     {
@@ -117,23 +98,7 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").child(noteToDelete.key).setValue(nil)
     }
     
-    func loadFirebaseNotes()
-    {
-        guard let uid = DataService.instance.uid else {
-            print("Cannot retrieve Firebase data at this time.")
-            return
-        }
-        let currentUsersCarKey = "\(uid)car"
-        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").observeSingleEvent(of: .value, with: { (snapshot) in
-            if snapshot.exists() {
-                let snapshotValue = snapshot.value as! [String : String]
-                for note in snapshotValue {
-//                    self.notes.append(note.value)
-                }
-                self.tableView.reloadData()
-            }
-        })
-    }
+    //MARK:- Utility functions
     
     func setObserver() {
         guard let uid = DataService.instance.uid else {
@@ -154,4 +119,23 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             self.tableView.reloadData()
         })
     }
+    
+    func launchNoteDetailAlert(indexPath: IndexPath) {
+        
+        let noteForCell = notes[indexPath.row].value as? String
+        
+        let alertController = UIAlertController(title: "Note", message: noteForCell, preferredStyle: UIAlertControllerStyle.alert)
+        
+        let OK = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
+        let delete = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
+            self.deleteNote(indexPath: indexPath)
+        }
+        
+        alertController.addAction(OK)
+        alertController.addAction(delete)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+
 }
