@@ -204,6 +204,8 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             let key = "\(uid)car"
             DataService.instance.carsRef.child("\(key)/latitude").setValue(nil)
             DataService.instance.carsRef.child("\(key)/longitude").setValue(nil)
+            DataService.instance.carsRef.child("\(key)/notes").setValue(nil)
+
         }
         mapview.removeAnnotations(mapview.annotations)
         setAddressLabels()
