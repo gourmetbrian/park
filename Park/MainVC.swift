@@ -54,6 +54,25 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         
         setup()
 
+        
+        
+    }
+    
+    func setup()
+    {
+        setAddressLabels()
+        print("ViewDidLoad was called.")
+
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        //This prevents multiple observers calling userResignedAppWhileCarIsParked from firing
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        locationAuthStatus()
         if let uid = DataService.instance.uid {
             let currentUsersCarKey = "\(uid)car"
             DataService.instance.carsRef.child(currentUsersCarKey).observe(.value, with: { (snapshot) in
@@ -96,25 +115,6 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             startCountdown()
             print(remainingTicks)
         }
-        
-    }
-    
-    func setup()
-    {
-        setAddressLabels()
-        print("ViewDidLoad was called.")
-
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        //This prevents multiple observers calling userResignedAppWhileCarIsParked from firing
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        locationAuthStatus()
-        print("ViewDidAppear was called.")
 
     }
 
