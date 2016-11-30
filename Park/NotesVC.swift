@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
@@ -17,25 +18,26 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var activeRow: Int = 0
     let DEFAULT_NOTE_TEXT = "Enter note here..."
     
-    var notes = [String]()
+    var notes = [FIRDataSnapshot]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        notes.append("This is a fake note.")
-        notes.append("Another fake note.")
-        notes.append("So fake!.")
+
+        
         //TODO: - implement custom text view so text deletes on selection
         
-        loadFirebaseNotes()
-        tableView.reloadData()
+//        loadFirebaseNotes()
 
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        tableView.reloadData()
+        super.viewDidAppear(animated)
+        setObserver()
+        
+
     }
     
     //MARK: - Table View Source and Delegate
@@ -55,8 +57,9 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
-        
-        cell.textLabel?.text = "\(notes[indexPath.row])"
+        if let noteForCell = notes[indexPath.row].value as? String {
+            cell.textLabel?.text = noteForCell
+        }
         
         return cell
     }
@@ -69,13 +72,16 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 return
             }
             let currentUsersCarKey = "\(uid)car"
+            let date = createTimeStampWithDashes()
             
-            let newFBNote = [textToSave! : true ] as [String : Bool]
+            let newFBNote = [ date : textToSave! ] as [String : String]
+            print(newFBNote)
     
             DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").updateChildValues(newFBNote)
-            notes.append(textToSave!)
+//            notes.append(textToSave!)
             tableView.reloadData()
             newNote.text = DEFAULT_NOTE_TEXT
+            dismissKeyboard()
         }
     }
 
@@ -84,7 +90,9 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func launchNoteDetailAlert(indexPath: IndexPath) {
         
-        let alertController = UIAlertController(title: "Note", message: "\(notes[indexPath.row])", preferredStyle: UIAlertControllerStyle.alert)
+        let noteForCell = notes[indexPath.row].value as? String
+        
+        let alertController = UIAlertController(title: "Note", message: noteForCell, preferredStyle: UIAlertControllerStyle.alert)
         
         let OK = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
         let delete = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
@@ -100,7 +108,13 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     func deleteNote(indexPath: IndexPath)
     {
-        notes.remove(at: indexPath.row)
+        guard let uid = DataService.instance.uid else {
+            print("Cannot retrieve Firebase data at this time.")
+            return
+        }
+        let currentUsersCarKey = "\(uid)car"
+        let noteToDelete = notes[indexPath.row]
+        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").child(noteToDelete.key).setValue(nil)
     }
     
     func loadFirebaseNotes()
@@ -110,13 +124,34 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
             return
         }
         let currentUsersCarKey = "\(uid)car"
-        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").observe(.value, with: { (snapshot) in
+        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.exists() {
-                let snapshotValue = snapshot.value as! [String: String]
+                let snapshotValue = snapshot.value as! [String : String]
                 for note in snapshotValue {
-                    self.notes.append(note.value)
+//                    self.notes.append(note.value)
                 }
+                self.tableView.reloadData()
             }
+        })
+    }
+    
+    func setObserver() {
+        guard let uid = DataService.instance.uid else {
+            return
+        }
+        
+        let currentUsersCarKey = "\(uid)car"
+        
+        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").observe(.value, with: {(snapshot: FIRDataSnapshot!) in
+            
+            var newItems = [FIRDataSnapshot]()
+            
+            for item in snapshot.children {
+                newItems.append(item as! FIRDataSnapshot)
+            }
+            
+            self.notes = newItems
+            self.tableView.reloadData()
         })
     }
 }

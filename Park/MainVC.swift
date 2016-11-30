@@ -382,13 +382,13 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func createTimeStamp() -> String        {
-            let date = Date()
-            let formatter = DateFormatter()
-            formatter.dateStyle = DateFormatter.Style.long
-            formatter.timeStyle = DateFormatter.Style.medium
-            return formatter.string(from: date)
-        }
+//    func createTimeStamp() -> String        {
+//            let date = Date()
+//            let formatter = DateFormatter()
+//            formatter.dateStyle = DateFormatter.Style.long
+//            formatter.timeStyle = DateFormatter.Style.medium
+//            return formatter.string(from: date)
+//        }
     
     func startCountdown()
     {

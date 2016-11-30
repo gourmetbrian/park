@@ -17,6 +17,7 @@
 		A936FDD21DC7C160009D2752 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A936FDD11DC7C160009D2752 /* DataService.swift */; };
 		A936FDD41DC7C50C009D2752 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A936FDD31DC7C50C009D2752 /* User.swift */; };
 		A936FDD61DC80FD5009D2752 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = A936FDD51DC80FD5009D2752 /* Car.swift */; };
+		A9521FCA1DEE095800C95A6F /* ViewController+DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9521FC91DEE095800C95A6F /* ViewController+DateFormatter.swift */; };
 		A95AA1131DBB894D00E23D23 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1121DBB894D00E23D23 /* AppDelegate.swift */; };
 		A95AA1181DBB894D00E23D23 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A95AA1161DBB894D00E23D23 /* Main.storyboard */; };
 		A95AA11B1DBB894D00E23D23 /* Park.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1191DBB894D00E23D23 /* Park.xcdatamodeld */; };
@@ -42,6 +43,7 @@
 		A936FDD11DC7C160009D2752 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		A936FDD31DC7C50C009D2752 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		A936FDD51DC80FD5009D2752 /* Car.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
+		A9521FC91DEE095800C95A6F /* ViewController+DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+DateFormatter.swift"; sourceTree = "<group>"; };
 		A95AA10F1DBB894D00E23D23 /* Park.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Park.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A95AA1121DBB894D00E23D23 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A95AA1171DBB894D00E23D23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				A99D80581DC7BED300D99E95 /* KeyboardDismissalExtension.swift */,
+				A9521FC91DEE095800C95A6F /* ViewController+DateFormatter.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 				A9BB91FF1DC2EE2100658522 /* CustomTextField.swift in Sources */,
 				A9271DE11DD17DFD0001AE7F /* ParkingSpot.swift in Sources */,
 				A92F69ED1DE34A64001DAE56 /* DatePickerVC.swift in Sources */,
+				A9521FCA1DEE095800C95A6F /* ViewController+DateFormatter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

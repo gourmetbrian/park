@@ -36,9 +36,9 @@ class CustomTextView: UITextView {
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.text.removeAll()
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        self.text.removeAll()
+//    }
 
 
 
