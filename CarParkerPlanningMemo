@@ -1,0 +1,27 @@
+Car Parker App Planning Memo
+
+####################################
+####### Main View Controller: ######
+####################################
+
+Description:
+
+The MainVC is a full-screen map. On app load, the map shows the user's GPS location.
+
+In the lower left hand corner, we have a small button of a car. When the user pushes this car, a pin drops wherever the user is. The intention is that this is where the user has left their car. On tap, the pin reveals the nickname of the car parked at that location.
+
+In the upper righthand corner, we have a small magnifying glass icon button. When the user pushes this, the map view zooms up, and gives directions from the user's current location to the user's car.
+
+If the user has multiple cars, the user can tap this magnifying glass button again and get directions to the next car. When all directions have been shown, the directions will return to the first set of directions shown.
+
+In the lower righthand corner of the VC, there is a settings button. Tapping this icon will lead the user to the settings VC.
+
+####################################
+#### Settings View Controller: #####
+####################################
+
+The top third of the screen has a rectangular view. In the center, there is a small circular image of the user's car. Above this image, the word SETTINGS. Below and to the left of this image, the name of the car is set.
+
+Below this view is another rectangular view. This view has two options:
+
+Push Notifications: this is a toggle off and on. If it is on, the user gets a push notification everyday at 4:30pm telling them if Alternate Side Parking is suspended or not the next day.

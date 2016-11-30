@@ -7,18 +7,82 @@
 //
 
 import UIKit
+import MapKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate  {
+
+    @IBOutlet weak var mapview: MKMapView!
+    
+    let locationManager = CLLocationManager()
+    
+    var mapHasCenteredOnce = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        mapview.delegate = self
+        mapview.userTrackingMode = MKUserTrackingMode.follow
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewDidAppear(_ animated: Bool) {
+        locationAuthStatus()
     }
+    
+    func locationAuthStatus()
+    {
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            mapview.showsUserLocation = true;
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+        }
+    }
+    
+    func centerMapOnLocation(location: CLLocation)
+    {
+        //TODO: This doesn't zoom in as much as we'd like
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, 5, 5)
+        mapview.setRegion(coordinateRegion, animated: true)
+    }
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        //centers the map only if it hasn't been centered before
+        if let loc = userLocation.location {
+            if !mapHasCenteredOnce {
+                centerMapOnLocation(location: loc)
+                mapHasCenteredOnce = true
+            }
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        //This creates a custom annotation
+        
+        let annoIdentifier = "park"
+        var annotationView: MKAnnotationView?
+        
+        if annotation.isKind(of: MKUserLocation.self) {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "User")
+            annotationView?.image = UIImage(named: "add")
+            annotationView?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        } else {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "Park")
+            annotationView?.image = UIImage(named: "car")
+            annotationView?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        }
+        return annotationView
+    }
+    
+    
+    
+    
+    @IBAction func parkCarBtnPressed(_ sender: AnyObject) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = CLLocationCoordinate2D(latitude: mapview.centerCoordinate.latitude, longitude: mapview.centerCoordinate.longitude)
+        mapview.addAnnotation(annotation)
+    }
+    
+    
+    
+    
 
 
 }

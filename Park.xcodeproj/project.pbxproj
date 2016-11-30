@@ -13,6 +13,15 @@
 		A95AA11B1DBB894D00E23D23 /* Park.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1191DBB894D00E23D23 /* Park.xcdatamodeld */; };
 		A95AA11D1DBB894D00E23D23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A95AA11C1DBB894D00E23D23 /* Assets.xcassets */; };
 		A95AA1201DBB894D00E23D23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A95AA11E1DBB894D00E23D23 /* LaunchScreen.storyboard */; };
+		A95AA1281DBB8FF800E23D23 /* ParkAnnotationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1271DBB8FF800E23D23 /* ParkAnnotationModel.swift */; };
+		A95AA12C1DBBD9CC00E23D23 /* SettingsVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA12B1DBBD9CC00E23D23 /* SettingsVCViewController.swift */; };
+		A95AA12F1DBDA21C00E23D23 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA12E1DBDA21C00E23D23 /* CustomCell.swift */; };
+		A95AA1361DBDA5B700E23D23 /* Car+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1301DBDA5B700E23D23 /* Car+CoreDataClass.swift */; };
+		A95AA1371DBDA5B700E23D23 /* Car+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1311DBDA5B700E23D23 /* Car+CoreDataProperties.swift */; };
+		A95AA1381DBDA5B700E23D23 /* Image+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1321DBDA5B700E23D23 /* Image+CoreDataClass.swift */; };
+		A95AA1391DBDA5B700E23D23 /* Image+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1331DBDA5B700E23D23 /* Image+CoreDataProperties.swift */; };
+		A95AA13A1DBDA5B700E23D23 /* ParkingSpot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1341DBDA5B700E23D23 /* ParkingSpot+CoreDataClass.swift */; };
+		A95AA13B1DBDA5B700E23D23 /* ParkingSpot+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95AA1351DBDA5B700E23D23 /* ParkingSpot+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +33,15 @@
 		A95AA11C1DBB894D00E23D23 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A95AA11F1DBB894D00E23D23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A95AA1211DBB894D00E23D23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A95AA1271DBB8FF800E23D23 /* ParkAnnotationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParkAnnotationModel.swift; sourceTree = "<group>"; };
+		A95AA12B1DBBD9CC00E23D23 /* SettingsVCViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVCViewController.swift; sourceTree = "<group>"; };
+		A95AA12E1DBDA21C00E23D23 /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
+		A95AA1301DBDA5B700E23D23 /* Car+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Car+CoreDataClass.swift"; path = "../Car+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A95AA1311DBDA5B700E23D23 /* Car+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Car+CoreDataProperties.swift"; path = "../Car+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A95AA1321DBDA5B700E23D23 /* Image+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Image+CoreDataClass.swift"; path = "../Image+CoreDataClass.swift"; sourceTree = "<group>"; };
+		A95AA1331DBDA5B700E23D23 /* Image+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Image+CoreDataProperties.swift"; path = "../Image+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A95AA1341DBDA5B700E23D23 /* ParkingSpot+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ParkingSpot+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		A95AA1351DBDA5B700E23D23 /* ParkingSpot+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ParkingSpot+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,8 +74,10 @@
 		A95AA1111DBB894D00E23D23 /* Park */ = {
 			isa = PBXGroup;
 			children = (
+				A95AA1291DBB900400E23D23 /* Models */,
+				A95AA12D1DBDA20400E23D23 /* Views */,
+				A95AA12A1DBB901000E23D23 /* Controllers */,
 				A95AA1121DBB894D00E23D23 /* AppDelegate.swift */,
-				A95AA1141DBB894D00E23D23 /* ViewController.swift */,
 				A95AA1161DBB894D00E23D23 /* Main.storyboard */,
 				A95AA11C1DBB894D00E23D23 /* Assets.xcassets */,
 				A95AA11E1DBB894D00E23D23 /* LaunchScreen.storyboard */,
@@ -65,6 +85,45 @@
 				A95AA1191DBB894D00E23D23 /* Park.xcdatamodeld */,
 			);
 			path = Park;
+			sourceTree = "<group>";
+		};
+		A95AA1291DBB900400E23D23 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A95AA13C1DBDA5EA00E23D23 /* Generated */,
+				A95AA1301DBDA5B700E23D23 /* Car+CoreDataClass.swift */,
+				A95AA1321DBDA5B700E23D23 /* Image+CoreDataClass.swift */,
+				A95AA1341DBDA5B700E23D23 /* ParkingSpot+CoreDataClass.swift */,
+				A95AA1271DBB8FF800E23D23 /* ParkAnnotationModel.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		A95AA12A1DBB901000E23D23 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A95AA1141DBB894D00E23D23 /* ViewController.swift */,
+				A95AA12B1DBBD9CC00E23D23 /* SettingsVCViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		A95AA12D1DBDA20400E23D23 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A95AA12E1DBDA21C00E23D23 /* CustomCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		A95AA13C1DBDA5EA00E23D23 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				A95AA1311DBDA5B700E23D23 /* Car+CoreDataProperties.swift */,
+				A95AA1331DBDA5B700E23D23 /* Image+CoreDataProperties.swift */,
+				A95AA1351DBDA5B700E23D23 /* ParkingSpot+CoreDataProperties.swift */,
+			);
+			name = Generated;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,8 +199,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A95AA1381DBDA5B700E23D23 /* Image+CoreDataClass.swift in Sources */,
+				A95AA1391DBDA5B700E23D23 /* Image+CoreDataProperties.swift in Sources */,
+				A95AA1371DBDA5B700E23D23 /* Car+CoreDataProperties.swift in Sources */,
 				A95AA11B1DBB894D00E23D23 /* Park.xcdatamodeld in Sources */,
+				A95AA13B1DBDA5B700E23D23 /* ParkingSpot+CoreDataProperties.swift in Sources */,
+				A95AA12C1DBBD9CC00E23D23 /* SettingsVCViewController.swift in Sources */,
+				A95AA13A1DBDA5B700E23D23 /* ParkingSpot+CoreDataClass.swift in Sources */,
 				A95AA1151DBB894D00E23D23 /* ViewController.swift in Sources */,
+				A95AA1361DBDA5B700E23D23 /* Car+CoreDataClass.swift in Sources */,
+				A95AA1281DBB8FF800E23D23 /* ParkAnnotationModel.swift in Sources */,
+				A95AA12F1DBDA21C00E23D23 /* CustomCell.swift in Sources */,
 				A95AA1131DBB894D00E23D23 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,6 +372,7 @@
 				A95AA1261DBB894D00E23D23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
