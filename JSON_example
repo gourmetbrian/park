@@ -1,0 +1,40 @@
+{
+  "users": {
+    "one": {
+      "uid" : 83838383838,
+      "name": "John Smith",
+      "cars": {
+         "1234": true
+      },
+      "parkingSpot": "abcd",
+      "timestamp": 1459361875666
+    },
+    "two": { ... },
+    "three": { ... }
+  },
+
+  {
+  "cars": {
+    "1234": {
+      "nickname": "Sue Subaru",
+      "parkingSpot": "abcd",
+      "owner" : 83838383838,
+      "licensePlate" : 123-456
+    },
+    "5678": { ... },
+    "9012": { ... }
+  },
+
+    {
+  "parkingSpots": {
+    "abcd": {
+      "timestamp": 1459361875666,
+      "latitude": 48.271737,
+      "longitude" : -116.538831,
+      "car" : "1234",
+      "parker" : 83838383838
+    },
+    "efgh": { ... },
+    "ijkl": { ... }
+  },
+}

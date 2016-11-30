@@ -8,13 +8,13 @@ Description:
 
 The MainVC is a full-screen map. On app load, the map shows the user's GPS location.
 
-In the lower left hand corner, we have a small button of a car. When the user pushes this car, a pin drops wherever the user is. The intention is that this is where the user has left their car. On tap, the pin reveals the nickname of the car parked at that location.
+In the lower righthand corner, we have a small button of a car. When the user pushes this car, a pin drops wherever the user is. The intention is that this is where the user has left their car. On tap, the pin reveals the nickname of the car parked at that location.
 
-In the upper righthand corner, we have a small magnifying glass icon button. When the user pushes this, the map view zooms up, and gives directions from the user's current location to the user's car.
+In the upper lefthand corner, we have a small magnifying glass icon button. When the user pushes this, the map view zooms up, and gives directions from the user's current location to the user's car.
 
 If the user has multiple cars, the user can tap this magnifying glass button again and get directions to the next car. When all directions have been shown, the directions will return to the first set of directions shown.
 
-In the lower righthand corner of the VC, there is a settings button. Tapping this icon will lead the user to the settings VC.
+In the lower lefthand corner of the VC, there is a settings button. Tapping this icon will lead the user to the settings VC.
 
 ####################################
 #### Settings View Controller: #####
