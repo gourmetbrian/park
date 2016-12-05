@@ -31,9 +31,9 @@ class AuthService {
                                 self.handleFirebaseError(error: error! as NSError, onComplete: onComplete)
                             } else {
                                 if user?.uid != nil {
-                                    //save user id!
+                                    
                                     DataService.instance.saveUser(uid: user!.uid)
-                                    //sign in
+                                    //Sign in
                                     FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
                                         if error != nil {
                                             self.handleFirebaseError(error: error! as NSError, onComplete: onComplete)
@@ -43,14 +43,17 @@ class AuthService {
                                     })
                                 }
                             }
-                            
                         })
                     }
                 } else {
-                    self.handleFirebaseError(error: error! as NSError, onComplete: onComplete)                }
+                    //Handle all other errors
+                    self.handleFirebaseError(error: error! as NSError, onComplete: onComplete)
+                }
             } else {
+                //Successfully logged in
                 onComplete?(nil, user)
             }
+            
         })
     }
     
@@ -62,7 +65,7 @@ class AuthService {
                 onComplete?("Invalid email address", nil)
                 break
             case .errorCodeWrongPassword:
-                onComplete?("There was a problem authenticating, please try again.", nil)
+                onComplete?("There was a problem authenticating, please try again", nil)
                 break
             case .errorCodeEmailAlreadyInUse, .errorCodeAccountExistsWithDifferentCredential:
                 onComplete?("Could not create account, email already in use.", nil)

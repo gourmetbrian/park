@@ -42,7 +42,7 @@
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="10"/>
@@ -66,7 +66,7 @@
                                         </constraints>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="10"/>
@@ -325,11 +325,12 @@
                         <outlet property="streetAddress" destination="dcb-lM-elG" id="MxL-hm-rXw"/>
                         <outlet property="timerLabel" destination="9zp-KD-CF1" id="awU-Tj-N2C"/>
                         <outlet property="trashBtn" destination="HrK-QV-mho" id="cjt-xB-q9I"/>
+                        <segue destination="mxy-bD-R5Y" kind="presentation" identifier="LoginVC" id="EVf-CS-Z80"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xXl-HC-tqu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3320.8000000000002" y="-372.86356821589209"/>
+            <point key="canvasLocation" x="2535" y="-374"/>
         </scene>
         <!--NotesVC-->
         <scene sceneID="Bfu-qd-KCo">
