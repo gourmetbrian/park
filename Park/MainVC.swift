@@ -98,6 +98,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     func setFirebaseObserver()
     {
         if let uid = DataService.instance.uid {
+            print("The uid is: \(uid)")
             let currentUsersCarKey = "\(uid)car"
             DataService.instance.carsRef.child(currentUsersCarKey).observe(.value, with: { (snapshot)
                 in
@@ -116,7 +117,9 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                     }
                     self.updateGUIForMapState()
                 }
-            })
+            }) { (error) in
+                print("The error was \(error.localizedDescription)")
+            }
         }
     }
     
@@ -222,6 +225,8 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         timer = nil
         meterExpirationDate = nil
         timerLabel.text = ""
+        parkState = .NO_CAR_PARKED
+        updateGUIForParkState()
     }
     
     func loadSavedUserCarLocation()
@@ -418,9 +423,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 timer = nil
                 meterExpirationDate = nil
                 alertUserThatMeterExpired()
-                
             }
-        
     }
     
     func alertUserThatMeterExpired()
@@ -428,7 +431,11 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         let ac = UIAlertController(title: meterExpirationMsgTitle, message: meterExpirationMsgBody, preferredStyle: .alert )
         
         
-        let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil)
+        let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {
+            alert -> Void in
+            self.timerLabel.text = ""
+        })
+
         
         ac.addAction(submitAction)
         
@@ -439,23 +446,15 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     func updateDisplay()
     {
-        let hours: String = String(format: "%02d", remainingTicks / 3600)
-        let mins: String = String(format: "%02d", remainingTicks % 3600 / 60)
-        let secs: String = String(format: "%02d", (remainingTicks % 3600) % 60)
-        if (Int(hours)! > 1) {
-            DispatchQueue.main.async {
-                self.timerLabel.text = "\(hours) hours \(mins) mins left"
+        let days: Int = remainingTicks / 86400
+        let hours: Int = remainingTicks % 86400 / 3600
+        let mins: Int = remainingTicks % 3600 / 60
+        let secs: Int = (remainingTicks % 3600) % 60
+        let timeLeftString: String = String(format: "%02d:%02d:%02d:%02d", days, hours, mins, secs)
+        DispatchQueue.main.async {
+                self.timerLabel.text = timeLeftString
                 self.timerLabel.setNeedsDisplay()
             }
-        } else if (Int(hours)! > 0){
-            self.timerLabel.text = "\(hours) hour \(mins) mins left"
-            self.timerLabel.setNeedsDisplay()
-        } else {
-            DispatchQueue.main.async {
-                self.timerLabel.text = "\(mins) mins \(secs) secs left"
-                self.timerLabel.setNeedsDisplay()
-            }
-        }
     }
     
     func registerLocal()
@@ -485,25 +484,11 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 //        var dateComponents = DateComponents()
         let newDate = UserDefaults.standard.object(forKey:"meterExpirationDateUserDefaults") as? Date ?? nil
         if (newDate != nil) {
-//            let hour = Calendar.current.component(.hour, from: meterExpirationDate!)
-//            let minute = Calendar.current.component(.minute, from: meterExpirationDate!)
-//            dateComponents.hour = hour
-//            dateComponents.minute = minute
-            
-            
-//            print("You set notification to go off at \(hour):\(minute)")
-//            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-            //TODO: - change triggers to match meterexpirationdate
-            //calculateeterdate
-            
-            calculateMeterExpiration()
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(self.remainingTicks), repeats: false)
             
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
             center.add(request)
         }
-        
-        
     }
     
     func saveRemainingMeterTimeToFirebase()
@@ -567,6 +552,8 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     {
         if let _ = meterExpirationDate {
             let now = Date()
+            let calculatedMeterExpirationTime = -(Int(now.timeIntervalSince(meterExpirationDate!)))
+            print("The calculated meter expiration time is /(calculatedMeterExpirationTime)!")
             if ( -(Int(now.timeIntervalSince(meterExpirationDate!))) > 0) {
                 remainingTicks = -(Int(now.timeIntervalSince(meterExpirationDate!)))
             } else {
