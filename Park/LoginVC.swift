@@ -11,6 +11,7 @@ import FirebaseAuth
 
 class LoginVC: UIViewController {
 
+    @IBOutlet weak var segment: UISegmentedControl!
     @IBOutlet weak var passwordField: CustomTextField!
     @IBOutlet weak var emailField: CustomTextField!
     
@@ -23,7 +24,7 @@ class LoginVC: UIViewController {
     @IBAction func loginPressed(_ sender: AnyObject) {
         if let email = emailField.text, let pass = passwordField.text, (email.characters.count > 0 && pass.characters.count > 0 ) {
             
-            AuthService.instance.login(email: email, password: pass, onComplete: { (errMsg, data) in
+            AuthService.instance.login(email: email, password: pass, state: segment.selectedSegmentIndex, onComplete: { (errMsg, data) in
                 guard errMsg == nil else {
                     let alert = UIAlertController(title: "Error Authentication", message: errMsg, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))

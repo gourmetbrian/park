@@ -11,6 +11,7 @@ import MapKit
 import FirebaseAuth
 import FirebaseDatabase
 import UserNotifications
+import CoreData
 
 class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -25,13 +26,14 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         case MAP_HYBRID
     }
     
+    var userParkingSpotBL: BLParkingSpot?
+    
     var usercar: Car?
     var userParkingSpot: ParkingSpot?
     var annotation: MKAnnotation?
     var remainingTicks: Int = 0
     var timer: Timer?
     var meterExpirationDate: Date?
-    var streetAddressMark: CLPlacemark?
     let locationManager = CLLocationManager()
     var mapHasCenteredOnce = false
     var parkState: ParkState = ParkState.NO_CAR_PARKED
@@ -40,6 +42,12 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     var observersSet: Bool = false
     let meterExpirationMsgTitle: String = "Your meter has expired"
     let meterExpirationMsgBody: String = "It's time to go feed the meter or move your car."
+
+    //Core Data vars
+    var container: NSPersistentContainer!
+    var userParkingSpots = [BLParkingSpot]()
+
+
 
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var streetAddress: UILabel!
@@ -53,43 +61,84 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //TODO Load fullscreen view that matches the launch screen
         mapview.delegate = self
         mapview.userTrackingMode = MKUserTrackingMode.follow
+        
+        //TODO initialize CoreData stack
+        CarParkManager.sharedInstance.initializeCoreDataStack()
     }
 
     
     override func viewWillDisappear(_ animated: Bool) {
         //This prevents multiple observers calling userResignedAppWhileCarIsParked from firing
-        if observersSet == true {
-            removeAppDelegateObservers()
-            observersSet = false
-        }
+//        if observersSet == true {
+//            removeAppDelegateObservers()
+//            observersSet = false
+//        }
 
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        guard FIRAuth.auth()?.currentUser != nil else {
-            performSegue(withIdentifier: "LoginVC", sender: nil)
-            return
-        }
+//        TODO delete all this Firebase stuff
+//        guard FIRAuth.auth()?.currentUser != nil else {
+//            performSegue(withIdentifier: "LoginVC", sender: nil)
+//            return
+//        }
+//        
+//        if observersSet == false {
+//            
+//            locationAuthStatus()
+//            
+//            setFirebaseObserver()
+//            
+//            setAppDelegateObserver()
+//            
+//            observersSet = true
+//        }
         
-        if observersSet == false {
-            
-            locationAuthStatus()
-            
-            setFirebaseObserver()
-            
-            setAppDelegateObserver()
-            
-            observersSet = true
-        }
+        //TODO on background thread query CoreData to see if there is a parked car object
+        //If there is, load it
+        //If not, nothing
         
-        if meterExpirationDate != nil {
-            calculateMeterExpiration()
-            startCountdown()
-        }
+        locationAuthStatus()
+//        
+//        DEBUG all code commented below is for debugging
+//        loadParkingSpotFromCoreData()
+//        if let _ = userParkingSpotBL {
+//            if (userParkingSpotBL?.isActive)! {
+//                parkState = .CAR_PARKED
+//                print("The parking spot longitude is \(userParkingSpotBL?.longitude)")
+//            }
+//        }
+//        
+//        updateGUIForParkState()
+//        
+//        if meterExpirationDate != nil {
+//            calculateMeterExpiration()
+//            startCountdown()
+//        }
+
+            CarParkManager.sharedInstance.clearCoreDataPersistentStore()
+        
     }
+    
+//    func loadParkingSpotFromCoreData()
+//    {
+//        let request = BLParkingSpot.createFetchRequest()
+//        let sort = NSSortDescriptor(key: "dateParked", ascending: false)
+//        request.sortDescriptors = [sort]
+//        
+//        do {
+//            userParkingSpots = try container.viewContext.fetch(request)
+//            if userParkingSpots.count > 0 {
+//                userParkingSpotBL = userParkingSpots[0]
+//            }
+//        } catch {
+//            print("Fetch failed")
+//        }
+//    }
 
     func locationAuthStatus()
     {
@@ -100,49 +149,49 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         }
     }
     
-    func setFirebaseObserver()
-    {
-        if let uid = DataService.instance.uid {
-            print("The uid is: \(uid)")
-            let currentUsersCarKey = "\(uid)car"
-            DataService.instance.carsRef.child(currentUsersCarKey).observe(.value, with: { (snapshot)
-                in
-                if snapshot.exists() {
-                    self.usercar = Car(snapshot: snapshot)
-                    if snapshot.hasChild("latitude") {
-                        self.loadSavedUserCarLocation()
-                        self.userParkingSpot = ParkingSpot(snapshot: snapshot)
-                        let location: CLLocation = CLLocation(latitude: (self.userParkingSpot?.coordinate.latitude)!, longitude: (self.userParkingSpot?.coordinate.longitude)!)
-                        self.convertParkingSpotToAddress(location: location)
-                        self.parkState = ParkState.CAR_PARKED
-                    } else {
-                        if (self.parkState != .NO_CAR_PARKED) {
-                            self.parkState = ParkState.NO_CAR_PARKED
-                        }
-                    }
-                    self.updateGUIForMapState()
-                }
-            }) { (error) in
-                print("The error was \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func setAppDelegateObserver()
-    {
-        let notificationCenter = NotificationCenter.default
-        
-        notificationCenter.addObserver(self, selector: #selector(userResignedAppWhileCarIsParked), name: Notification.Name.UIApplicationWillResignActive, object: nil)
-        
-        notificationCenter.addObserver(self, selector: #selector(userReopenedAppWhileCarisParked), name: Notification.Name.UIApplicationDidBecomeActive, object: nil)
-    }
-    
-    func removeAppDelegateObservers()
-    {
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-    }
+//    func setFirebaseObserver()
+//    {
+//        if let uid = DataService.instance.uid {
+//            print("The uid is: \(uid)")
+//            let currentUsersCarKey = "\(uid)car"
+//            DataService.instance.carsRef.child(currentUsersCarKey).observe(.value, with: { (snapshot)
+//                in
+//                if snapshot.exists() {
+//                    self.usercar = Car(snapshot: snapshot)
+//                    if snapshot.hasChild("latitude") {
+//                        self.loadSavedUserCarLocation()
+//                        self.userParkingSpot = ParkingSpot(snapshot: snapshot)
+//                        let location: CLLocation = CLLocation(latitude: (self.userParkingSpot?.coordinate.latitude)!, longitude: (self.userParkingSpot?.coordinate.longitude)!)
+//                        self.convertParkingSpotToAddress(location: location)
+//                        self.parkState = ParkState.CAR_PARKED
+//                    } else {
+//                        if (self.parkState != .NO_CAR_PARKED) {
+//                            self.parkState = ParkState.NO_CAR_PARKED
+//                        }
+//                    }
+//                    self.updateGUIForMapState()
+//                }
+//            }) { (error) in
+//                print("The error was \(error.localizedDescription)")
+//            }
+//        }
+//    }
+//    
+//    func setAppDelegateObserver()
+//    {
+//        let notificationCenter = NotificationCenter.default
+//        
+//        notificationCenter.addObserver(self, selector: #selector(userResignedAppWhileCarIsParked), name: Notification.Name.UIApplicationWillResignActive, object: nil)
+//        
+//        notificationCenter.addObserver(self, selector: #selector(userReopenedAppWhileCarisParked), name: Notification.Name.UIApplicationDidBecomeActive, object: nil)
+//    }
+//    
+//    func removeAppDelegateObservers()
+//    {
+//        let notificationCenter = NotificationCenter.default
+//        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+//        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+//    }
     
     func centerMapOnLocation(location: CLLocation)
     {
@@ -160,72 +209,115 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         }
     }
     
-//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        //This creates a custom annotation
-//        
-//        let annoIdentifier = "park"
-//        var annotationView: MKAnnotationView?
-//        
-//        if annotation.isKind(of: MKUserLocation.self) {
-//            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "User")
-//            annotationView?.image = UIImage(named: "car-outline")
-//            annotationView?.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-//        } else
-//        {
-//            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: annoIdentifier)
-//            annotationView?.image = UIImage(named: "car-outline")
-//            annotationView?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+//    func dropPinOnMap()
+//    {
+//        CarParkManager.sharedInstance.loadParkingSpotFromCoreData()
+//        let currentParkingSpot = CarParkManager.sharedInstance.userParkingSpots[0]
+//        if currentParkingSpot.isActive {
+//            let annotation = MKPointAnnotation()
+//            annotation.coordinate = CLLocationCoordinate2D(latitude: currentParkingSpot.latitude , longitude: currentParkingSpot.longitude)
+//            mapview.addAnnotation(annotation)
+//            let location: CLLocation = CLLocation(latitude: (annotation.coordinate.latitude), longitude: (annotation.coordinate.longitude))
+//            self.convertParkingSpotToAddress(location: location)
 //        }
-//        return annotationView
 //    }
+    
+//    func addUserLocationToContext()
+//    {
+//        if userParkingSpots.count > 0 {
+//            if let currentParkingSpot = userParkingSpots[0] as BLParkingSpot?  {
+//                currentParkingSpot.isActive = false
+//                saveContext()
+//
+//            }
+//        }
+//        
+//        let userLoc = mapview.userLocation.location
+//        if let loc = userLoc {
+//            let latitude: Double = (loc.coordinate.latitude)
+//            let longitude: Double = (loc.coordinate.longitude)
+//            let parkingSpot = BLParkingSpot(context: container.viewContext)
+//            parkingSpot.latitude = latitude
+//            parkingSpot.longitude = longitude
+//            parkingSpot.dateParked = Date() as NSDate?
+//            parkingSpot.isActive = true
+//        }
+//        
+//        saveContext()
+//        
+//        
+//    }
+//    
+//    func saveContext()
+//    {
+//        if container.viewContext.hasChanges {
+//            do {
+//                try container.viewContext.save()
+//            } catch {
+//                print("An error occurred while saving: \(error)")
+//            }
+//        }
+//    }
+    
+
     
     @IBAction func parkCarBtnPressed(_ sender: AnyObject)
     {
-        if (userParkingSpot == nil) {
-            let userLoc = mapview.userLocation.location
-            if let loc = userLoc {
-                let latitude: Double = (loc.coordinate.latitude)
-                let longitude: Double = (loc.coordinate.longitude)
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = CLLocationCoordinate2D(latitude: latitude , longitude: longitude)
-                mapview.addAnnotation(annotation)
-                
-                let uid = DataService.instance.uid
-                if let uid = uid {
-                    
-                    let car = [ "owner": uid,
-                                "latitude": latitude,
-                                "longitude": longitude ] as [String : Any]
-                    
-                    let key = "\(uid)car"
-                    DataService.instance.carsRef.child(key).updateChildValues(car)
-                    DataService.instance.usersRef.child(uid).child("cars").setValue(["carID" : key])
-                    
-                    userParkingSpot = ParkingSpot(car: key, owner: uid, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
-                }
-                parkState = ParkState.CAR_PARKED
-                updateGUIForParkState()
-            } else {
-                locationAuthStatus()
-            }
-        } else {
-            centerMapOnLocation(location: CLLocation(latitude: (userParkingSpot?.coordinate.latitude)!, longitude: (userParkingSpot?.coordinate.longitude)!))
+        let userLoc = mapview.userLocation.location
+        guard let location = userLoc else {
+            print("Failed to get user location.")
+            return
         }
+        CarParkManager.sharedInstance.addUserLocationToContext(location: location)
+        CarParkManager.sharedInstance.dropPinOnMap(map: mapview)
+//        setAddressLabels(streetAddressMark: CarParkManager.sharedInstance.convertParkingSpotToAddress(location: location))
+        
+        parkState = .CAR_PARKED
+        updateGUIForParkState()
+        
+//        //If no parking spot exists, get busy making one
+//        if (userParkingSpot == nil) {
+//            let userLoc = mapview.userLocation.location
+//            if let loc = userLoc {
+//                let latitude: Double = (loc.coordinate.latitude)
+//                let longitude: Double = (loc.coordinate.longitude)
+//                let annotation = MKPointAnnotation()
+//                annotation.coordinate = CLLocationCoordinate2D(latitude: latitude , longitude: longitude)
+//                mapview.addAnnotation(annotation)
+//                
+//                let uid = DataService.instance.uid
+//                if let uid = uid {
+//                    
+//                    let car = [ "owner": uid,
+//                                "latitude": latitude,
+//                                "longitude": longitude ] as [String : Any]
+//                    
+//                    let key = "\(uid)car"
+//                    DataService.instance.carsRef.child(key).updateChildValues(car)
+//                    DataService.instance.usersRef.child(uid).child("cars").setValue(["carID" : key])
+//                    
+//                    userParkingSpot = ParkingSpot(car: key, owner: uid, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+//                }
+//                
+//                parkState = ParkState.CAR_PARKED
+//                updateGUIForParkState()
+//                
+//            } else {
+//                locationAuthStatus()
+//            }
+//        } else {
+//            //if there is a parking spot, center map on parking spot
+//            centerMapOnLocation(location: CLLocation(latitude: (userParkingSpot?.coordinate.latitude)!, longitude: (userParkingSpot?.coordinate.longitude)!))
+//        }
     }
     
     @IBAction func deleteParkingSpotBtnPressed(_ sender: AnyObject)
     {
-        userParkingSpot = nil
-        streetAddressMark = nil
-        if let uid = DataService.instance.uid {
-            let key = "\(uid)car"
-            DataService.instance.carsRef.child("\(key)/latitude").setValue(nil)
-            DataService.instance.carsRef.child("\(key)/longitude").setValue(nil)
-            DataService.instance.carsRef.child("\(key)/notes").setValue(nil)
-
-        }
+        CarParkManager.sharedInstance.deleteParkingSpotFromCoreData()
+        streetAddress.text = "Park your car to use."
+        cityAddress.text = ""
         mapview.removeAnnotations(mapview.annotations)
-        setAddressLabels()
+        
         timer?.invalidate()
         timer = nil
         meterExpirationDate = nil
@@ -273,7 +365,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 //        renderer.strokeColor = UIColor.blue
 //        return renderer
 //    }
-
+//
     func convertParkingSpotToAddress(location: CLLocation)
     {
         CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
@@ -286,10 +378,9 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             
             if (placemarks?.count)! > 0 {
                 let pm = placemarks?[0] as CLPlacemark!
-                self.streetAddressMark = pm
+                let streetAddressMark = pm
                 print("####################\n####################\n##########")
-                print(self.streetAddressMark.debugDescription)
-                self.setAddressLabels()
+                self.setAddressLabels(streetAddressMark: streetAddressMark!)
             }
             else {
                 print("Problem with the data received from geocoder")
@@ -298,9 +389,9 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     
-    func setAddressLabels()
+    func setAddressLabels(streetAddressMark: CLPlacemark)
     {
-        if let locality = streetAddressMark?.locality, let street = streetAddressMark?.thoroughfare, let streetnumber = streetAddressMark?.subThoroughfare, let state = streetAddressMark?.administrativeArea, let zip = streetAddressMark?.postalCode {
+        if let locality = streetAddressMark.locality, let street = streetAddressMark.thoroughfare, let streetnumber = streetAddressMark.subThoroughfare, let state = streetAddressMark.administrativeArea, let zip = streetAddressMark.postalCode {
             streetAddress.text = "\(streetnumber) \(street)"
              cityAddress.text = "\(locality), \(state) \(zip)"
         } else {
@@ -580,6 +671,9 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             notesBtn.alpha = 1
             trashBtn.isEnabled = true
             trashBtn.alpha = 1
+            let location = CLLocation(latitude: CarParkManager.sharedInstance.userParkingSpots[0].latitude, longitude: CarParkManager.sharedInstance.userParkingSpots[0].longitude)
+            print("The location's latitude is \(location.coordinate.latitude)")
+            convertParkingSpotToAddress(location: location)
             break
         case ParkState.NO_CAR_PARKED:
             mapBtn.isEnabled = false
@@ -590,10 +684,11 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             notesBtn.alpha = 0.6
             trashBtn.isEnabled = false
             trashBtn.alpha = 0.6
+            streetAddress.text = "Park your car to use."
+            cityAddress.text = ""
             break
         default:
             break
         }
-        setAddressLabels()
     }
 }
