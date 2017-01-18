@@ -15,7 +15,7 @@ class CarParkManager {
     static let sharedInstance = CarParkManager()
     
     private init() {
-        //prevent our Singleton from being initialized multiple times
+        //prevents our Singleton from being initialized multiple times
     }
     
     var container: NSPersistentContainer!
@@ -53,7 +53,7 @@ class CarParkManager {
         }
     }
     
-    func loadParkingSpotFromCoreData()
+    func loadParkingSpotFromCoreData() -> Bool
     {
         let request = BLParkingSpot.createFetchRequest()
         let sort = NSSortDescriptor(key: "dateParked", ascending: false)
@@ -63,9 +63,13 @@ class CarParkManager {
             userParkingSpots = try container.viewContext.fetch(request)
             if userParkingSpots.count > 0 {
 //                userParkingSpotBL = userParkingSpots[0]
+                return true
+            } else {
+                return false
             }
         } catch {
             print("Fetch failed")
+            return false
         }
     }
     
@@ -92,39 +96,14 @@ class CarParkManager {
     
     func dropPinOnMap(map: MKMapView)
     {
-        loadParkingSpotFromCoreData()
-        let currentParkingSpot = userParkingSpots[0]
-        if currentParkingSpot.isActive {
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = CLLocationCoordinate2D(latitude: currentParkingSpot.latitude , longitude: currentParkingSpot.longitude)
-            map.addAnnotation(annotation)
-            let location: CLLocation = CLLocation(latitude: (annotation.coordinate.latitude), longitude: (annotation.coordinate.longitude))
+        if (loadParkingSpotFromCoreData()) {
+            let currentParkingSpot = userParkingSpots[0]
+            if currentParkingSpot.isActive {
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = CLLocationCoordinate2D(latitude: currentParkingSpot.latitude , longitude: currentParkingSpot.longitude)
+                map.addAnnotation(annotation)
+            }
         }
-    }
-    
-    func convertParkingSpotToAddress(location: CLLocation, map: MKMapView) -> CLPlacemark
-    {
-        var streetAddressMark = CLPlacemark()
-        let placemarks = map.annotations
-        CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
-            
-            if error != nil {
-                print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
-                return
-            }
-            placemarks
-            
-            if (placemarks?.count)! > 0 {
-                let pm = placemarks?[0] as CLPlacemark!
-                streetAddressMark = pm!
-                print("####################\n####################\n##########")
-                print(streetAddressMark.debugDescription)
-            }
-            else {
-                print("Problem with the data received from geocoder")
-            }
-        })
-        return streetAddressMark
     }
     
     func deleteParkingSpotFromCoreData()

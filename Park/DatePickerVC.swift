@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import UserNotifications
 
 class DatePickerVC: UIViewController {
     @IBOutlet weak var datePicker: UIDatePicker!
+    let meterExpirationMsgTitle: String = "Your meter has expired"
+    let meterExpirationMsgBody: String = "It's time to go feed the meter or move your car."
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +25,8 @@ class DatePickerVC: UIViewController {
             warnUserOfImproperDateSelection()
         } else {
         print(datePicker.date)
+        registerLocal()
+        scheduleLocal(localNotificationDate: datePicker.date)
         performSegue(withIdentifier: "segueToMainVC", sender: nil)
         }
     }
@@ -39,6 +44,53 @@ class DatePickerVC: UIViewController {
         if segue.identifier == "segueToMainVC" {
             let mainVC = segue.destination as! MainVC
             mainVC.meterExpirationDate = datePicker.date
+        }
+    }
+    
+    func registerLocal()
+    {
+        let center = UNUserNotificationCenter.current()
+        
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                print("Yay!")
+            } else {
+                print("D'oh")
+            }
+        }
+    }
+    
+    func scheduleLocal(localNotificationDate: Date)
+    {
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = meterExpirationMsgTitle
+        content.body = meterExpirationMsgBody
+        content.categoryIdentifier = "alarm"
+        content.userInfo = ["customData": "fizzbuzz"] //TODO: What is this?
+        content.sound = UNNotificationSound.default()
+        
+        let calendar = NSCalendar.current
+        
+        let components = calendar.dateComponents([.month, .day, .hour, .minute], from: localNotificationDate)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        
+        center.add(request)
+    }
+    
+    func calculateMeterExpiration(localNotificationDate: Date) -> Int
+    {
+        
+        let now = Date()
+        let calculatedMeterExpirationTime = -(Int(now.timeIntervalSince(localNotificationDate)))
+        print("The calculated meter expiration time is /(calculatedMeterExpirationTime)!")
+        if (calculatedMeterExpirationTime > 0) {
+            return calculatedMeterExpirationTime
+        } else {
+            return 0
         }
     }
 
