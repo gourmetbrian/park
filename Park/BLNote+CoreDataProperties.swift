@@ -2,7 +2,7 @@
 //  BLNote+CoreDataProperties.swift
 //  Park
 //
-//  Created by Brian Lane on 1/15/17.
+//  Created by Brian Lane on 1/18/17.
 //  Copyright © 2017 Brian Lane. All rights reserved.
 //
 
@@ -16,8 +16,8 @@ extension BLNote {
         return NSFetchRequest<BLNote>(entityName: "BLNote");
     }
 
-    @NSManaged public var noteText: String
     @NSManaged public var dateCreated: NSDate
-    @NSManaged public var parkingSpot: BLParkingSpot?
+    @NSManaged public var noteText: String
+    @NSManaged public var parkingSpot: BLParkingSpot
 
 }

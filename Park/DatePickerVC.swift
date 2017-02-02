@@ -40,13 +40,6 @@ class DatePickerVC: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "segueToMainVC" {
-            let mainVC = segue.destination as! MainVC
-            mainVC.meterExpirationDate = datePicker.date
-        }
-    }
-    
     func registerLocal()
     {
         let center = UNUserNotificationCenter.current()
@@ -67,7 +60,6 @@ class DatePickerVC: UIViewController {
         content.title = meterExpirationMsgTitle
         content.body = meterExpirationMsgBody
         content.categoryIdentifier = "alarm"
-        content.userInfo = ["customData": "fizzbuzz"] //TODO: What is this?
         content.sound = UNNotificationSound.default()
         
         let calendar = NSCalendar.current

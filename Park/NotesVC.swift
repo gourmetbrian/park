@@ -8,9 +8,6 @@
 
 import UIKit
 import CoreData
-import Firebase
-import FirebaseAuth
-import FirebaseDatabase
 
 class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     
@@ -18,19 +15,26 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
     @IBOutlet weak var tableView: UITableView!
     var activeRow: Int = 0
     let DEFAULT_NOTE_TEXT = "Enter note here..."
-    let nm = NotesManager.sharedInstance
+    //Core Data vars
     var fetchedResultsController: NSFetchedResultsController<BLNote>!
     var container: NSPersistentContainer!
 
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        setup()
+    }
+    
+    func setup(){
         tableView.dataSource = self
         tableView.delegate = self
+        initializeCoreDataStack()
+        loadNotesFromCoreData()
+    }
+    
+    func initializeCoreDataStack(){
         
         container = NSPersistentContainer(name: "Park")
-
+        
         container.loadPersistentStores { storeDescription, error in
             self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             
@@ -38,8 +42,6 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
                 print("Unresolved error \(error)")
             }
         }
-        
-        loadNotesFromCoreData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -47,14 +49,13 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
         newNoteField.placeholder = DEFAULT_NOTE_TEXT
     }
     
-    //MARK: - Table View Source and Delegate
+    //MARK:- Table View Source and Delegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         activeRow = indexPath.row
         
         launchNoteDetailAlert(indexPath: indexPath)
-        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -81,18 +82,19 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
     
     func addNoteToContext(note: String)
     {
-        let newNote = NSEntityDescription.entity(forEntityName: "BLNote", in: container.viewContext)
+        let newNote = BLNote(context: container.viewContext)
+        newNote.dateCreated = NSDate()
+        newNote.noteText = note
         
-        let record = NSManagedObject(entity: newNote!, insertInto: container.viewContext)
+        let parkingSpots = BLParkingSpot.createFetchRequest()
         
-        record.setValue(Date() as NSDate, forKey: "dateCreated")
-        record.setValue(note, forKey: "noteText")
-        
-        do {
-            try record.managedObjectContext?.save()
-        } catch {
-            print("There was a problem saving.")
+        if let parkingSpots = try? container.viewContext.fetch(parkingSpots) {
+            if parkingSpots.count > 0 {
+                parkingSpots[0].addToNotes(newNote)
+            }
         }
+        
+        saveContext()
 
     }
     
@@ -102,22 +104,19 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
     
     //MARK:- Button functions
     
-
-
     @IBAction func backBtnPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction func addBtnPressed(_ sender: Any) {
         let textToSave = newNoteField.text
-        //TODO convert this to a variable
-        if (textToSave != DEFAULT_NOTE_TEXT && textToSave != nil && textToSave != "") {
+        let textIsAcceptable = (textToSave != DEFAULT_NOTE_TEXT && textToSave != nil && textToSave != "")
+        if (textIsAcceptable) {
             addNoteToContext(note: textToSave!)
             newNoteField.text = ""
             newNoteField.placeholder = DEFAULT_NOTE_TEXT
             dismissKeyboard()
         }
-//        tableView.reloadData()
     }
     
     func loadNotesFromCoreData()
@@ -140,60 +139,27 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
         }
     }
     
-
-    
-    func deleteNote(indexPath: IndexPath)
-    {
-//        guard let uid = DataService.instance.uid else {
-//            print("Cannot retrieve Firebase data at this time.")
-//            return
-//        }
-//        let currentUsersCarKey = "\(uid)car"
-//        let noteToDelete = notes[indexPath.row]
-//        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").child(noteToDelete.key).setValue(nil)
-    }
-    
     //MARK:- Utility functions
-    
-//    func setObserver() {
-//        guard let uid = DataService.instance.uid else {
-//            return
-//        }
-//        
-//        let currentUsersCarKey = "\(uid)car"
-//        
-//        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").observe(.value, with: {(snapshot: FIRDataSnapshot!) in
-//            
-//            var newItems = [FIRDataSnapshot]()
-//            
-//            for item in snapshot.children {
-//                newItems.append(item as! FIRDataSnapshot)
-//            }
-//            
-//            self.notes = newItems
-//            self.tableView.reloadData()
-//        })
-//    }
+
     
     func launchNoteDetailAlert(indexPath: IndexPath) {
         
-//        let noteForCell = nm.notes[indexPath.row].noteText
-//        
-//        let alertController = UIAlertController(title: "Note", message: noteForCell, preferredStyle: UIAlertControllerStyle.alert)
-//        
-//        let OK = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
-//        let delete = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
-//            self.deleteNote(indexPath: indexPath)
-//        }
-//        
-//        alertController.addAction(OK)
-//        alertController.addAction(delete)
-//        
-//        self.present(alertController, animated: true, completion: nil)
+        let noteForCell = fetchedResultsController.object(at: indexPath)
+        
+        let alertController = UIAlertController(title: "Note", message: noteForCell.noteText, preferredStyle: UIAlertControllerStyle.alert)
+        
+        let OK = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
+        let delete = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
+            self.container.viewContext.delete(noteForCell)
+            self.saveContext()
+        }
+        
+        alertController.addAction(OK)
+        alertController.addAction(delete)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
 
-    
-    
     func saveContext() {
         if container.viewContext.hasChanges {
             do {

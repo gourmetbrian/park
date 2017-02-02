@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="BLNote" representedClassName="BLNote" syncable="YES">
-        <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="noteText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="noteText" attributeType="String" syncable="YES"/>
         <relationship name="parkingSpot" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BLParkingSpot" inverseName="notes" inverseEntity="BLParkingSpot" syncable="YES"/>
     </entity>
     <entity name="BLParkingSpot" representedClassName="BLParkingSpot" syncable="YES">
@@ -10,10 +10,10 @@
         <attribute name="isActive" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="notes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BLNote" inverseName="parkingSpot" inverseEntity="BLNote" syncable="YES"/>
+        <relationship name="notes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BLNote" inverseName="parkingSpot" inverseEntity="BLNote" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BLParkingSpot" positionX="153" positionY="-30" width="128" height="120"/>
         <element name="BLNote" positionX="-54" positionY="-90" width="128" height="90"/>
+        <element name="BLParkingSpot" positionX="153" positionY="-30" width="128" height="120"/>
     </elements>
 </model>
