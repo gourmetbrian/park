@@ -52,7 +52,6 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //TODO Load fullscreen view that matches the launch screen
     }
     
     func loadParkedCarFromCoreData()
@@ -286,8 +285,7 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
             notesBtn.alpha = 0.6
             trashBtn.isEnabled = false
             trashBtn.alpha = 0.6
-            streetAddress.text = "Park your car to use."
-            cityAddress.text = ""
+            setAddressLabels(streetAddressMark: nil)
             break
         }
     }
@@ -319,9 +317,8 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
             parkingSpotPersist = userParkingSpots[0]
             dropPinOnMap(forParkingSpot: parkingSpotPersist!)
             parkState = .CAR_PARKED
-            updateGUIForParkState()
         }
-
+        updateGUIForParkState()
     }
     
     func initializeCoreDataStack(){
