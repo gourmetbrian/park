@@ -10,153 +10,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--LoginVC-->
-        <scene sceneID="dz8-Wp-Gxo">
-            <objects>
-                <viewController id="mxy-bD-R5Y" customClass="LoginVC" customModule="Park" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Lar-Qw-bsa"/>
-                        <viewControllerLayoutGuide type="bottom" id="DwN-aK-2bM"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="RaM-Z7-xxJ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="carsbangkok" translatesAutoresizingMaskIntoConstraints="NO" id="oo3-aD-qQU">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                            </imageView>
-                            <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="khS-Qq-5uQ">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="park" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sw7-He-LGX">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="124"/>
-                                        <fontDescription key="fontDescription" name="Futura-MediumItalic" family="Futura" pointSize="95"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="enter email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fRa-sL-RU0" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
-                                        <rect key="frame" x="56.666666666666657" y="260" width="300" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="300" id="P9y-9y-s4L"/>
-                                            <constraint firstAttribute="height" constant="30" id="oYI-6t-Adm"/>
-                                        </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="10"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                                <color key="value" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="enter password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g7a-0z-YQk" customClass="CustomTextField" customModule="Park" customModuleProvider="target">
-                                        <rect key="frame" x="56.666666666666657" y="300" width="300" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="B20-i4-01D"/>
-                                            <constraint firstAttribute="width" constant="300" id="wEF-yd-1iL"/>
-                                        </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="10"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                                <color key="value" red="0.8980392157" green="0.45098039220000002" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PrT-Hs-Fw6" customClass="CustomButton" customModule="Park" customModuleProvider="target">
-                                        <rect key="frame" x="56.666666666666657" y="340" width="300" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="daE-JM-8oP"/>
-                                            <constraint firstAttribute="width" constant="300" id="wzZ-qJ-uln"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                        <state key="normal" title="submit">
-                                            <color key="titleColor" red="1" green="0.30026862929999998" blue="0.43096229660000002" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="10"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
-                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="loginPressed:" destination="mxy-bD-R5Y" eventType="touchUpInside" id="Pm2-oM-zKU"/>
-                                        </connections>
-                                    </button>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gLl-Vc-mPv">
-                                        <rect key="frame" x="37" y="200" width="300" height="29"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.88294753839999995" green="0.88294753839999995" blue="0.88294753839999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <segments>
-                                            <segment title="Sign Up"/>
-                                            <segment title="Log In"/>
-                                        </segments>
-                                    </segmentedControl>
-                                </subviews>
-                                <color key="backgroundColor" red="0.89803921568627454" green="0.45098039215686275" blue="0.45098039215686275" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="PrT-Hs-Fw6" firstAttribute="top" secondItem="g7a-0z-YQk" secondAttribute="bottom" constant="10" id="2Kd-la-ZQc"/>
-                                    <constraint firstItem="g7a-0z-YQk" firstAttribute="centerX" secondItem="khS-Qq-5uQ" secondAttribute="centerX" id="6pV-Vu-sSB"/>
-                                    <constraint firstItem="sw7-He-LGX" firstAttribute="top" secondItem="khS-Qq-5uQ" secondAttribute="top" constant="50" id="Eyi-Fq-slB"/>
-                                    <constraint firstItem="fRa-sL-RU0" firstAttribute="centerX" secondItem="khS-Qq-5uQ" secondAttribute="centerX" id="Jn9-T4-jpy"/>
-                                    <constraint firstItem="PrT-Hs-Fw6" firstAttribute="centerX" secondItem="khS-Qq-5uQ" secondAttribute="centerX" id="d62-30-Uic"/>
-                                    <constraint firstItem="g7a-0z-YQk" firstAttribute="top" secondItem="fRa-sL-RU0" secondAttribute="bottom" constant="10" id="d9b-23-n1o"/>
-                                    <constraint firstItem="sw7-He-LGX" firstAttribute="centerX" secondItem="khS-Qq-5uQ" secondAttribute="centerX" id="dTT-8S-BCH"/>
-                                    <constraint firstItem="sw7-He-LGX" firstAttribute="leading" secondItem="khS-Qq-5uQ" secondAttribute="leading" id="p3y-jB-jCk"/>
-                                    <constraint firstAttribute="trailing" secondItem="sw7-He-LGX" secondAttribute="trailing" id="qpo-MF-MqB"/>
-                                    <constraint firstItem="fRa-sL-RU0" firstAttribute="top" secondItem="sw7-He-LGX" secondAttribute="bottom" constant="86" id="t3p-m8-v6F"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="oo3-aD-qQU" firstAttribute="top" secondItem="RaM-Z7-xxJ" secondAttribute="top" id="E4v-TA-z9C"/>
-                            <constraint firstItem="oo3-aD-qQU" firstAttribute="leading" secondItem="RaM-Z7-xxJ" secondAttribute="leading" id="Zmy-hD-dcm"/>
-                            <constraint firstItem="khS-Qq-5uQ" firstAttribute="bottom" secondItem="DwN-aK-2bM" secondAttribute="top" id="hCS-CX-lYE"/>
-                            <constraint firstItem="khS-Qq-5uQ" firstAttribute="trailing" secondItem="oo3-aD-qQU" secondAttribute="trailing" id="iR1-a3-H0w"/>
-                            <constraint firstItem="khS-Qq-5uQ" firstAttribute="top" secondItem="oo3-aD-qQU" secondAttribute="top" id="leS-Ut-ppw"/>
-                            <constraint firstAttribute="trailing" secondItem="oo3-aD-qQU" secondAttribute="trailing" id="nbk-Ok-fdf"/>
-                            <constraint firstItem="DwN-aK-2bM" firstAttribute="top" secondItem="oo3-aD-qQU" secondAttribute="bottom" id="wTI-TJ-ZBu"/>
-                            <constraint firstItem="khS-Qq-5uQ" firstAttribute="leading" secondItem="oo3-aD-qQU" secondAttribute="leading" id="yXa-sn-8Gf"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="emailField" destination="fRa-sL-RU0" id="5Y1-rf-9Ts"/>
-                        <outlet property="passwordField" destination="g7a-0z-YQk" id="clf-ba-s1e"/>
-                        <outlet property="segment" destination="gLl-Vc-mPv" id="pkE-bR-bVu"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="RPU-ef-cpv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3320.8000000000002" y="-1325.4872563718143"/>
-        </scene>
         <!--MainVC-->
         <scene sceneID="jbT-7C-Ugq">
             <objects>
@@ -339,7 +192,6 @@
                         <outlet property="notesBtn" destination="O7z-Sr-rvs" id="B5x-RF-DUh"/>
                         <outlet property="streetAddress" destination="dcb-lM-elG" id="MxL-hm-rXw"/>
                         <outlet property="trashBtn" destination="HrK-QV-mho" id="cjt-xB-q9I"/>
-                        <segue destination="mxy-bD-R5Y" kind="presentation" identifier="LoginVC" id="EVf-CS-Z80"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xXl-HC-tqu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -498,7 +350,6 @@
     <resources>
         <image name="back" width="256" height="256"/>
         <image name="car-outline" width="512" height="512"/>
-        <image name="carsbangkok" width="540" height="960"/>
         <image name="plus-symbol" width="256" height="256"/>
     </resources>
 </document>
