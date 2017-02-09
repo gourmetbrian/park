@@ -39,7 +39,7 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
             self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             
             if let error = error {
-                print("Unresolved error \(error)")
+            self.errorAccessingCoreData(error: error)
             }
         }
     }
@@ -165,8 +165,23 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSF
             do {
                 try container.viewContext.save()
             } catch {
-                print("An error occurred while saving: \(error)")
+                let alertController = UIAlertController(title: "Error", message: "An error occurred while saving. Please try again.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
             }
         }
+    }
+    
+    func errorAccessingCoreData(error: Error) {
+        let alertController = UIAlertController(title: "Error", message: "There was an error retrieving your notes: \(error)", preferredStyle: UIAlertControllerStyle.alert)
+        let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+            alert -> Void in
+        })
+        alertController.addAction(submitAction)
+        self.present(alertController, animated: true, completion: nil)
+
     }
 }

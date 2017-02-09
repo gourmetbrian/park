@@ -24,7 +24,6 @@ class DatePickerVC: UIViewController {
         if (datePicker.date < now) {
             warnUserOfImproperDateSelection()
         } else {
-        print(datePicker.date)
         registerLocal()
         scheduleLocal(localNotificationDate: datePicker.date)
         performSegue(withIdentifier: "segueToMainVC", sender: nil)
@@ -45,11 +44,7 @@ class DatePickerVC: UIViewController {
         let center = UNUserNotificationCenter.current()
         
         center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-            if granted {
-                print("Yay!")
-            } else {
-                print("D'oh")
-            }
+
         }
     }
     
@@ -78,7 +73,6 @@ class DatePickerVC: UIViewController {
         
         let now = Date()
         let calculatedMeterExpirationTime = -(Int(now.timeIntervalSince(localNotificationDate)))
-        print("The calculated meter expiration time is /(calculatedMeterExpirationTime)!")
         if (calculatedMeterExpirationTime > 0) {
             return calculatedMeterExpirationTime
         } else {

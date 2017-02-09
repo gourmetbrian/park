@@ -24,8 +24,6 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
         case MAP_HYBRID
     }
     
-    var userParkingSpotBL: BLParkingSpot?
-    
     var annotation: MKAnnotation?
     
     let locationManager = CLLocationManager()
@@ -64,9 +62,13 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
         do {
             userParkingSpots = try
             container.viewContext.fetch(request)
-            print("Got \(userParkingSpots.count) parkingSpots")
         } catch {
-            print("Fetch failed.")
+            let alertController = UIAlertController(title: "Error", message: "Cannot retrieve parking spot right now.", preferredStyle: UIAlertControllerStyle.alert)
+            let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                alert -> Void in
+            })
+            alertController.addAction(submitAction)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -116,7 +118,12 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
         if (parkState == .NO_CAR_PARKED) {
             let userLoc = mapview.userLocation.location
             guard let location = userLoc else {
-                print("Failed to get user location.")
+                let alertController = UIAlertController(title: "Error", message: "Cannot retrieve user location right now.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
                 return
             }
             
@@ -130,15 +137,15 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
             
             parkingSpotPersist = userParkingSpot
             dropPinOnMap(forParkingSpot: userParkingSpot)
-            print(userParkingSpot.debugDescription)
             parkState = .CAR_PARKED
             updateGUIForParkState()
             
         } else {
 
-            let userParkingSpot = userParkingSpots[0]
+            if let userParkingSpot = parkingSpotPersist {
             let loc = CLLocation(latitude: userParkingSpot.latitude, longitude: userParkingSpot.longitude)
             centerMapOnLocation(location: loc)
+            }
         }
     }
     
@@ -179,10 +186,14 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
         
     {
         CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
-            print(location)
             
             if error != nil {
-                print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                let alertController = UIAlertController(title: "Error", message: "Unable to get parking spot address.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
                 return
             }
             
@@ -192,8 +203,12 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
                 self.setAddressLabels(streetAddressMark: streetAddressMark!)
             }
             else {
-                print("Problem with the data received from geocoder")
-            }
+                let alertController = UIAlertController(title: "Error", message: "Problem with geocoder information.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)            }
         })
     }
     
@@ -296,14 +311,10 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NS
         switch (type) {
         case .insert:
             dropPinOnMap(forParkingSpot: anObject as! BLParkingSpot)
-            print("Parking spot added")
             break
-            
         case .delete:
             deleteAllNotes()
-            print("Delete happened")
-        default:
-            print("Default happened")
+        default: break
         }
     }
     
