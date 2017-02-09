@@ -8,11 +8,10 @@
 
 import UIKit
 import MapKit
-import FirebaseAuth
-import FirebaseDatabase
 import UserNotifications
+import CoreData
 
-class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, NSFetchedResultsControllerDelegate {
     
     enum ParkState {
         case CAR_PARKED
@@ -25,21 +24,19 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         case MAP_HYBRID
     }
     
-    var usercar: Car?
-    var userParkingSpot: ParkingSpot?
     var annotation: MKAnnotation?
-    var remainingTicks: Int = 0
-    var timer: Timer?
-    var meterExpirationDate: Date?
-    var streetAddressMark: CLPlacemark?
+    
     let locationManager = CLLocationManager()
     var mapHasCenteredOnce = false
-    var parkState: ParkState = ParkState.NO_CAR_PARKED
+    var parkState: ParkState = .NO_CAR_PARKED
     var mapState: MapState = .MAP_STANDARD
-    let meterExpirationDateUserDefaults = "meterExpirationDateUserDefaults"
-    var observersSet: Bool = false
-    let meterExpirationMsgTitle: String = "Your meter has expired"
-    let meterExpirationMsgBody: String = "It's time to go feed the meter or move your car."
+
+
+    //Core Data vars
+    var container: NSPersistentContainer!
+    var fetchedResultsController: NSFetchedResultsController<BLParkingSpot>!
+    var userParkingSpots = [BLParkingSpot]()
+    var parkingSpotPersist: BLParkingSpot?
 
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var streetAddress: UILabel!
@@ -53,37 +50,40 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapview.delegate = self
-        mapview.userTrackingMode = MKUserTrackingMode.follow
     }
-
     
-    override func viewWillDisappear(_ animated: Bool) {
-        //This prevents multiple observers calling userResignedAppWhileCarIsParked from firing
-        if observersSet == true {
-            removeAppDelegateObservers()
-            observersSet = false
+    func loadParkedCarFromCoreData()
+    {
+        
+        let request = BLParkingSpot.createFetchRequest()
+        let sort = NSSortDescriptor(key: "dateParked", ascending: false)
+        request.sortDescriptors = [sort]
+        
+        do {
+            userParkingSpots = try
+            container.viewContext.fetch(request)
+        } catch {
+            let alertController = UIAlertController(title: "Error", message: "Cannot retrieve parking spot right now.", preferredStyle: UIAlertControllerStyle.alert)
+            let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                alert -> Void in
+            })
+            alertController.addAction(submitAction)
+            self.present(alertController, animated: true, completion: nil)
         }
-
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        if observersSet == false {
-            
-            locationAuthStatus()
-            
-            setFirebaseObserver()
-            
-            setAppDelegateObserver()
-            
-            observersSet = true
-        }
+        locationAuthStatus()
         
-        if meterExpirationDate != nil {
-            calculateMeterExpiration()
-            startCountdown()
-        }
+        setup()
+    }
+    
+    func dropPinOnMap(forParkingSpot: BLParkingSpot)
+    {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = CLLocationCoordinate2D(latitude: forParkingSpot.latitude , longitude: forParkingSpot.longitude)
+        mapview.addAnnotation(annotation)
     }
 
     func locationAuthStatus()
@@ -93,50 +93,6 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         } else {
             locationManager.requestWhenInUseAuthorization()
         }
-    }
-    
-    func setFirebaseObserver()
-    {
-        if let uid = DataService.instance.uid {
-            print("The uid is: \(uid)")
-            let currentUsersCarKey = "\(uid)car"
-            DataService.instance.carsRef.child(currentUsersCarKey).observe(.value, with: { (snapshot)
-                in
-                if snapshot.exists() {
-                    self.usercar = Car(snapshot: snapshot)
-                    if snapshot.hasChild("latitude") {
-                        self.loadSavedUserCarLocation()
-                        self.userParkingSpot = ParkingSpot(snapshot: snapshot)
-                        let location: CLLocation = CLLocation(latitude: (self.userParkingSpot?.coordinate.latitude)!, longitude: (self.userParkingSpot?.coordinate.longitude)!)
-                        self.convertParkingSpotToAddress(location: location)
-                        self.parkState = ParkState.CAR_PARKED
-                    } else {
-                        if (self.parkState != .NO_CAR_PARKED) {
-                            self.parkState = ParkState.NO_CAR_PARKED
-                        }
-                    }
-                    self.updateGUIForMapState()
-                }
-            }) { (error) in
-                print("The error was \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func setAppDelegateObserver()
-    {
-        let notificationCenter = NotificationCenter.default
-        
-        notificationCenter.addObserver(self, selector: #selector(userResignedAppWhileCarIsParked), name: Notification.Name.UIApplicationWillResignActive, object: nil)
-        
-        notificationCenter.addObserver(self, selector: #selector(userReopenedAppWhileCarisParked), name: Notification.Name.UIApplicationDidBecomeActive, object: nil)
-    }
-    
-    func removeAppDelegateObservers()
-    {
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-        notificationCenter.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
     func centerMapOnLocation(location: CLLocation)
@@ -154,153 +110,120 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             }
         }
     }
-    
-//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        //This creates a custom annotation
-//        
-//        let annoIdentifier = "park"
-//        var annotationView: MKAnnotationView?
-//        
-//        if annotation.isKind(of: MKUserLocation.self) {
-//            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "User")
-//            annotationView?.image = UIImage(named: "car-outline")
-//            annotationView?.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-//        } else
-//        {
-//            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: annoIdentifier)
-//            annotationView?.image = UIImage(named: "car-outline")
-//            annotationView?.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-//        }
-//        return annotationView
-//    }
-    
+
+
+    //MARK: - park and delete parking spot buttons
     @IBAction func parkCarBtnPressed(_ sender: AnyObject)
     {
-        if (userParkingSpot == nil) {
+        if (parkState == .NO_CAR_PARKED) {
             let userLoc = mapview.userLocation.location
-            if let loc = userLoc {
-                let latitude: Double = (loc.coordinate.latitude)
-                let longitude: Double = (loc.coordinate.longitude)
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = CLLocationCoordinate2D(latitude: latitude , longitude: longitude)
-                mapview.addAnnotation(annotation)
-                
-                let uid = DataService.instance.uid
-                if let uid = uid {
-                    
-                    let car = [ "owner": uid,
-                                "latitude": latitude,
-                                "longitude": longitude ] as [String : Any]
-                    
-                    let key = "\(uid)car"
-                    DataService.instance.carsRef.child(key).updateChildValues(car)
-                    DataService.instance.usersRef.child(uid).child("cars").setValue(["carID" : key])
-                    
-                    userParkingSpot = ParkingSpot(car: key, owner: uid, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
-                }
-                parkState = ParkState.CAR_PARKED
-                updateGUIForParkState()
-            } else {
-                locationAuthStatus()
+            guard let location = userLoc else {
+                let alertController = UIAlertController(title: "Error", message: "Cannot retrieve user location right now.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
+                return
             }
+            
+            let userParkingSpot = BLParkingSpot(context: container.viewContext)
+            userParkingSpot.dateParked = NSDate()
+            userParkingSpot.latitude = location.coordinate.latitude
+            userParkingSpot.longitude = location.coordinate.longitude
+            userParkingSpot.isActive = true
+            
+            saveContext()
+            
+            parkingSpotPersist = userParkingSpot
+            dropPinOnMap(forParkingSpot: userParkingSpot)
+            parkState = .CAR_PARKED
+            updateGUIForParkState()
+            
         } else {
-            centerMapOnLocation(location: CLLocation(latitude: (userParkingSpot?.coordinate.latitude)!, longitude: (userParkingSpot?.coordinate.longitude)!))
+
+            if let userParkingSpot = parkingSpotPersist {
+            let loc = CLLocation(latitude: userParkingSpot.latitude, longitude: userParkingSpot.longitude)
+            centerMapOnLocation(location: loc)
+            }
         }
     }
     
     @IBAction func deleteParkingSpotBtnPressed(_ sender: AnyObject)
     {
-        userParkingSpot = nil
-        streetAddressMark = nil
-        if let uid = DataService.instance.uid {
-            let key = "\(uid)car"
-            DataService.instance.carsRef.child("\(key)/latitude").setValue(nil)
-            DataService.instance.carsRef.child("\(key)/longitude").setValue(nil)
-            DataService.instance.carsRef.child("\(key)/notes").setValue(nil)
-
-        }
-        mapview.removeAnnotations(mapview.annotations)
-        setAddressLabels()
-        timer?.invalidate()
-        timer = nil
-        meterExpirationDate = nil
-        timerLabel.text = ""
-        parkState = .NO_CAR_PARKED
-        updateGUIForParkState()
-    }
-    
-    func loadSavedUserCarLocation()
-    {
-        let latitude = usercar?.latitude
-        let longitude = usercar?.longitude
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = CLLocationCoordinate2D(latitude: latitude! , longitude: longitude!)
-        mapview.addAnnotation(annotation)
         
-        if let uid = DataService.instance.uid {
-        userParkingSpot = ParkingSpot(car: "\(uid)car", owner: uid, coordinate: CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!))
+        let alertController = UIAlertController(title: "Delete Parking Spot", message: "Delete your parking spot and all its data?", preferredStyle: UIAlertControllerStyle.alert)
+        let submitAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.default, handler: {
+            alert -> Void in
+            
+            var notes: [BLNote] = [BLNote]()
+            if (self.parkingSpotPersist?.notes.count)! > 0 {
+                for note in (self.parkingSpotPersist?.notes)! {
+                    notes.append(note as! BLNote)
+                }
+                for note in notes {
+                    self.container.viewContext.delete(note)
+                }
+            }
+            self.container.viewContext.delete(self.parkingSpotPersist!)
+            self.parkingSpotPersist = nil
+            self.saveContext()
+            self.setAddressLabels(streetAddressMark: nil)
+            self.mapview.removeAnnotations(self.mapview.annotations)
+            
+            self.parkState = .NO_CAR_PARKED
+            self.updateGUIForParkState()
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (UIAlertAction) in
         }
+        
+        alertController.addAction(submitAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
     }
-
-//    
-//    func calculateSegmentDirections()
-//    {
-//        let request: MKDirectionsRequest = MKDirectionsRequest()
-//        request.source = MKMapItem(placemark: MKPlacemark(coordinate: mapview.userLocation.coordinate))
-//        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: (userParkingSpot?.coordinate)!))
-//        request.requestsAlternateRoutes = false
-//        request.transportType = .walking
-//        
-//        let directions = MKDirections(request: request)
-//        
-//        directions.calculate { [unowned self] response, error in
-//            guard let unwrappedResponse = response else { return }
-//            
-//            for route in unwrappedResponse.routes {
-//                self.mapview.add(route.polyline)
-//                self.mapview.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-//            }
-//        }
-//    }
-//    
-//    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-//        let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
-//        renderer.strokeColor = UIColor.blue
-//        return renderer
-//    }
 
     func convertParkingSpotToAddress(location: CLLocation)
+        
     {
         CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
-            print(location)
             
             if error != nil {
-                print("Reverse geocoder failed with error" + (error?.localizedDescription)!)
+                let alertController = UIAlertController(title: "Error", message: "Unable to get parking spot address.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
                 return
             }
             
             if (placemarks?.count)! > 0 {
                 let pm = placemarks?[0] as CLPlacemark!
-                self.streetAddressMark = pm
-                print("####################\n####################\n##########")
-                print(self.streetAddressMark.debugDescription)
-                self.setAddressLabels()
+                let streetAddressMark = pm
+                self.setAddressLabels(streetAddressMark: streetAddressMark!)
             }
             else {
-                print("Problem with the data received from geocoder")
-            }
+                let alertController = UIAlertController(title: "Error", message: "Problem with geocoder information.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)            }
         })
     }
     
-    
-    func setAddressLabels()
+    func setAddressLabels(streetAddressMark: CLPlacemark?)
     {
-        if let locality = streetAddressMark?.locality, let street = streetAddressMark?.thoroughfare, let streetnumber = streetAddressMark?.subThoroughfare, let state = streetAddressMark?.administrativeArea, let zip = streetAddressMark?.postalCode {
-            streetAddress.text = "\(streetnumber) \(street)"
-             cityAddress.text = "\(locality), \(state) \(zip)"
-        } else {
-            streetAddress.text = "Park your car to use."
-            cityAddress.text = ""
+        guard let locality = streetAddressMark?.locality, let street = streetAddressMark?.thoroughfare, let streetnumber = streetAddressMark?.subThoroughfare, let state = streetAddressMark?.administrativeArea, let zip = streetAddressMark?.postalCode else {
+            DispatchQueue.main.async {
+                self.streetAddress.text = "Park your car to use."
+                self.cityAddress.text = ""
+            }
+            return
+        }
+        DispatchQueue.main.async {
+            self.streetAddress.text = "\(streetnumber) \(street)"
+            self.cityAddress.text = "\(locality), \(state) \(zip)"
         }
     }
     
@@ -346,219 +269,6 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         case .MAP_HYBRID:
             mapview.mapType = MKMapType.hybrid
             break
-        default:
-            break
-        }
-    }
-    
-    //MARK: - Meter Setup and update
-    
-//    @IBAction func meterBtnPressed(_ sender: AnyObject) {
-//        registerLocal()
-//        scheduleLocal()
-//        calculateMeterExpiration()
-//        startCountdown()
-//        
-//       //The below is all debug stuff
-//        let alertController = UIAlertController(title: "Timer Set", message: "", preferredStyle: UIAlertControllerStyle.alert)
-//        let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
-//            alert -> Void in
-//        })
-//        alertController.addAction(submitAction)
-//        self.present(alertController, animated: true, completion: nil)
-//    }
-    
-    func promptUserForMeterTime()
-    {
-        let alertController = UIAlertController(title: "Add Meter Time", message: "Set timer for meter", preferredStyle: UIAlertControllerStyle.alert)
-        
-        let submitAction = UIAlertAction(title: "Set Timer", style: UIAlertActionStyle.default, handler: {
-            alert -> Void in
-            
-            if let task = Int((alertController.textFields?.first?.text)!) {
-                self.remainingTicks = task * 60
-            }
-            self.startCountdown()
-            
-            alertController.dismiss(animated: true, completion: {
-            })
-        })
-        
-        alertController.addTextField { (textField : UITextField!) -> Void in
-            textField.placeholder = "Enter time for reminder"
-        }
-        alertController.addAction(submitAction)
-        
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
-//    func createTimeStamp() -> String        {
-//            let date = Date()
-//            let formatter = DateFormatter()
-//            formatter.dateStyle = DateFormatter.Style.long
-//            formatter.timeStyle = DateFormatter.Style.medium
-//            return formatter.string(from: date)
-//        }
-    
-    func startCountdown()
-    {
-        if (timer != nil) {
-            return
-        }
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(MainVC.decreaseTimer), userInfo: nil, repeats: true)
-    }
-    
-    func decreaseTimer()
-    {
-        if remainingTicks > 0 {
-            remainingTicks -= 1
-            updateDisplay()
-            print(self.remainingTicks)
-        }
-        
-            
-            if remainingTicks <= 0 {
-                timerLabel.text = ""
-                timer?.invalidate()
-                timer = nil
-                meterExpirationDate = nil
-                alertUserThatMeterExpired()
-            }
-    }
-    
-    func alertUserThatMeterExpired()
-    {
-        let ac = UIAlertController(title: meterExpirationMsgTitle, message: meterExpirationMsgBody, preferredStyle: .alert )
-        
-        
-        let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {
-            alert -> Void in
-            self.timerLabel.text = ""
-        })
-
-        
-        ac.addAction(submitAction)
-        
-        self.present(ac, animated: true, completion: nil)
-        
-    }
-
-
-    func updateDisplay()
-    {
-        let days: Int = remainingTicks / 86400
-        let hours: Int = remainingTicks % 86400 / 3600
-        let mins: Int = remainingTicks % 3600 / 60
-        let secs: Int = (remainingTicks % 3600) % 60
-        let timeLeftString: String = String(format: "%02d:%02d:%02d:%02d", days, hours, mins, secs)
-        DispatchQueue.main.async {
-                self.timerLabel.text = timeLeftString
-                self.timerLabel.setNeedsDisplay()
-            }
-    }
-    
-    func registerLocal()
-    {
-        let center = UNUserNotificationCenter.current()
-        
-        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-            if granted {
-                print("Yay!")
-            } else {
-                print("D'oh")
-            }
-        }
-    }
-    
-    func scheduleLocal()
-    {
-            let center = UNUserNotificationCenter.current()
-            
-            let content = UNMutableNotificationContent()
-        content.title = meterExpirationMsgTitle
-        content.body = meterExpirationMsgBody
-        content.categoryIdentifier = "alarm"
-        content.userInfo = ["customData": "fizzbuzz"] //TODO: What is this?
-        content.sound = UNNotificationSound.default()
-        
-//        var dateComponents = DateComponents()
-        let newDate = UserDefaults.standard.object(forKey:"meterExpirationDateUserDefaults") as? Date ?? nil
-        if (newDate != nil) {
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(self.remainingTicks), repeats: false)
-            
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            center.add(request)
-        }
-    }
-    
-    func saveRemainingMeterTimeToFirebase()
-    {
-            if let uid = DataService.instance.uid {
-            DataService.instance.usersRef.child(uid).child("remainingMeterTime").setValue(remainingTicks)
-            }
-    }
-    
-    func testForMeterDate()
-    {
-        
-        //debug-only func
-        if let _ = meterExpirationDate {
-        let alertController = UIAlertController(title: "Date Worked", message: "The date is \(meterExpirationDate!)", preferredStyle: UIAlertControllerStyle.alert)
-        
-        let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {
-            alert -> Void in
-        })
-        
-        alertController.addAction(submitAction)
-        
-        self.present(alertController, animated: true, completion: nil)
-            
-        }
-    }
-    
-    func userResignedAppWhileCarIsParked()
-    {
-        UserDefaults.standard.set(meterExpirationDate, forKey: meterExpirationDateUserDefaults)
-        let meterUserDefaultsDate = UserDefaults.standard.object(forKey: meterExpirationDateUserDefaults)
-        print("The meter expiration date is \(meterUserDefaultsDate)")
-        scheduleLocal()
-        if (timer != nil) {
-        timer?.invalidate()
-        timer = nil
-        }
-        
-    }
-    
-    func userReopenedAppWhileCarisParked()
-    {
-        if (timer == nil) {
-            let newDate = UserDefaults.standard.object(forKey:meterExpirationDateUserDefaults) as? Date ?? nil
-            print("The new date is \(newDate)")
-            
-            if newDate != nil {
-                meterExpirationDate = newDate
-                UserDefaults.standard.set(nil, forKey: meterExpirationDateUserDefaults)
-                //            testForMeterDate()
-                calculateMeterExpiration()
-                startCountdown()
-            }
-            
-            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        }
-
-    }
-    
-    func calculateMeterExpiration()
-    {
-        if let _ = meterExpirationDate {
-            let now = Date()
-            let calculatedMeterExpirationTime = -(Int(now.timeIntervalSince(meterExpirationDate!)))
-            print("The calculated meter expiration time is /(calculatedMeterExpirationTime)!")
-            if ( -(Int(now.timeIntervalSince(meterExpirationDate!))) > 0) {
-                remainingTicks = -(Int(now.timeIntervalSince(meterExpirationDate!)))
-            } else {
-                remainingTicks = 0
-            }
         }
     }
     
@@ -575,6 +285,11 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             notesBtn.alpha = 1
             trashBtn.isEnabled = true
             trashBtn.alpha = 1
+
+            let parkingSpot = parkingSpotPersist
+            let loc = CLLocation(latitude: (parkingSpot?.latitude)!, longitude: (parkingSpot?.longitude)!)
+            convertParkingSpotToAddress(location: loc)
+            
             break
         case ParkState.NO_CAR_PARKED:
             mapBtn.isEnabled = false
@@ -585,10 +300,82 @@ class MainVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             notesBtn.alpha = 0.6
             trashBtn.isEnabled = false
             trashBtn.alpha = 0.6
-            break
-        default:
+            setAddressLabels(streetAddressMark: nil)
             break
         }
-        setAddressLabels()
     }
+    
+    //MARK:- CoreData funcs
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch (type) {
+        case .insert:
+            dropPinOnMap(forParkingSpot: anObject as! BLParkingSpot)
+            break
+        case .delete:
+            deleteAllNotes()
+        default: break
+        }
+    }
+    
+    func setup()
+    {
+        mapview.delegate = self
+        mapview.userTrackingMode = MKUserTrackingMode.follow
+        initializeCoreDataStack()
+        loadParkedCarFromCoreData()
+        if userParkingSpots.count > 0 {
+            parkingSpotPersist = userParkingSpots[0]
+            dropPinOnMap(forParkingSpot: parkingSpotPersist!)
+            parkState = .CAR_PARKED
+        }
+        updateGUIForParkState()
+    }
+    
+    func initializeCoreDataStack(){
+        
+        container = NSPersistentContainer(name: "Park")
+        
+        container.loadPersistentStores { storeDescription, error in
+            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
+            if let error = error {
+                
+                let alertController = UIAlertController(title: "There was a problem", message: "There was a problem loading your parking spot: \(error)", preferredStyle: UIAlertControllerStyle.alert)
+                
+                let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
+                
+                
+            }
+        }
+    }
+    
+    func saveContext() {
+        if container.viewContext.hasChanges {
+            do {
+                try container.viewContext.save()
+            } catch {
+                let alertController = UIAlertController(title: "Error saving parking spot", message: "There was an error saving your parking spot: \(error)", preferredStyle: UIAlertControllerStyle.alert)
+                
+                let submitAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
+
+            }
+        }
+    }
+    func deleteAllNotes() {
+        let notesRequest = BLNote.createFetchRequest()
+        if let notes = try? container.viewContext.fetch(notesRequest) {
+            if notes.count > 0 {
+                for note in notes {
+                    container.viewContext.delete(note)
+                }
+                saveContext()
+            }
+        }
+    }
+
 }

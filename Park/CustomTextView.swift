@@ -35,11 +35,5 @@ class CustomTextView: UITextView {
         self.layer.cornerRadius = cornerRadius
         
     }
-    
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        self.text.removeAll()
-//    }
-
-
 
 }

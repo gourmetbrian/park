@@ -7,128 +7,151 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseAuth
-import FirebaseDatabase
+import CoreData
 
-class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var newNoteField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     var activeRow: Int = 0
     let DEFAULT_NOTE_TEXT = "Enter note here..."
-    
-    var notes = [FIRDataSnapshot]()
+    //Core Data vars
+    var fetchedResultsController: NSFetchedResultsController<BLNote>!
+    var container: NSPersistentContainer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setup()
+    }
+    
+    func setup(){
         tableView.dataSource = self
         tableView.delegate = self
+        initializeCoreDataStack()
+        loadNotesFromCoreData()
+    }
+    
+    func initializeCoreDataStack(){
+        
+        container = NSPersistentContainer(name: "Park")
+        
+        container.loadPersistentStores { storeDescription, error in
+            self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
+            if let error = error {
+            self.errorAccessingCoreData(error: error)
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        setObserver()
         newNoteField.placeholder = DEFAULT_NOTE_TEXT
     }
     
-    //MARK: - Table View Source and Delegate
+    //MARK:- Table View Source and Delegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         activeRow = indexPath.row
         
         launchNoteDetailAlert(indexPath: indexPath)
-        
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return fetchedResultsController.sections?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
+        
+        let sectionInfo = fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
+    
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
-        if let noteForCell = notes[indexPath.row].value as? String {
-            cell.textLabel?.text = noteForCell
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let note = fetchedResultsController.object(at: indexPath)
+        cell.textLabel?.text = note.noteText
         
         return cell
     }
     
+    
+    
+    func addNoteToContext(note: String)
+    {
+        let newNote = BLNote(context: container.viewContext)
+        newNote.dateCreated = NSDate()
+        newNote.noteText = note
+        
+        let parkingSpots = BLParkingSpot.createFetchRequest()
+        
+        if let parkingSpots = try? container.viewContext.fetch(parkingSpots) {
+            if parkingSpots.count > 0 {
+                parkingSpots[0].addToNotes(newNote)
+            }
+        }
+        
+        saveContext()
+
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.reloadData()
+    }
+    
     //MARK:- Button functions
     
-
-
     @IBAction func backBtnPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction func addBtnPressed(_ sender: Any) {
         let textToSave = newNoteField.text
-        if (textToSave != DEFAULT_NOTE_TEXT && textToSave != nil && textToSave != "") {
-            guard let uid = DataService.instance.uid else {
-                print("Cannot save data to Firebase at this time.")
-                return
-            }
-            let currentUsersCarKey = "\(uid)car"
-            let date = createTimeStampWithDashes()
-            
-            let newFBNote = [ date : textToSave! ] as [String : String]
-            print(newFBNote)
-            
-            DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").updateChildValues(newFBNote)
-            //            notes.append(textToSave!)
-            tableView.reloadData()
+        let textIsAcceptable = (textToSave != DEFAULT_NOTE_TEXT && textToSave != nil && textToSave != "")
+        if (textIsAcceptable) {
+            addNoteToContext(note: textToSave!)
             newNoteField.text = ""
             newNoteField.placeholder = DEFAULT_NOTE_TEXT
             dismissKeyboard()
         }
     }
-
     
-    func deleteNote(indexPath: IndexPath)
+    func loadNotesFromCoreData()
     {
-        guard let uid = DataService.instance.uid else {
-            print("Cannot retrieve Firebase data at this time.")
-            return
+        if fetchedResultsController == nil {
+            let request = BLNote.createFetchRequest()
+            let sort = NSSortDescriptor(key: "dateCreated", ascending: false)
+            
+            request.sortDescriptors = [sort]
+            
+            fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            fetchedResultsController.delegate = self
         }
-        let currentUsersCarKey = "\(uid)car"
-        let noteToDelete = notes[indexPath.row]
-        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").child(noteToDelete.key).setValue(nil)
+        
+        do {
+            try fetchedResultsController.performFetch()
+            tableView.reloadData()
+        } catch {
+            print("Fetch failed")
+        }
     }
     
     //MARK:- Utility functions
-    
-    func setObserver() {
-        guard let uid = DataService.instance.uid else {
-            return
-        }
-        
-        let currentUsersCarKey = "\(uid)car"
-        
-        DataService.instance.carsRef.child("\(currentUsersCarKey)/notes").observe(.value, with: {(snapshot: FIRDataSnapshot!) in
-            
-            var newItems = [FIRDataSnapshot]()
-            
-            for item in snapshot.children {
-                newItems.append(item as! FIRDataSnapshot)
-            }
-            
-            self.notes = newItems
-            self.tableView.reloadData()
-        })
-    }
+
     
     func launchNoteDetailAlert(indexPath: IndexPath) {
         
-        let noteForCell = notes[indexPath.row].value as? String
+        let noteForCell = fetchedResultsController.object(at: indexPath)
         
-        let alertController = UIAlertController(title: "Note", message: noteForCell, preferredStyle: UIAlertControllerStyle.alert)
+        let alertController = UIAlertController(title: "Note", message: noteForCell.noteText, preferredStyle: UIAlertControllerStyle.alert)
         
         let OK = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default)
         let delete = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
-            self.deleteNote(indexPath: indexPath)
+            self.container.viewContext.delete(noteForCell)
+            self.saveContext()
         }
         
         alertController.addAction(OK)
@@ -136,6 +159,29 @@ class NotesVC: UIViewController, UITableViewDataSource, UITableViewDelegate {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    
 
+    func saveContext() {
+        if container.viewContext.hasChanges {
+            do {
+                try container.viewContext.save()
+            } catch {
+                let alertController = UIAlertController(title: "Error", message: "An error occurred while saving. Please try again.", preferredStyle: UIAlertControllerStyle.alert)
+                let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+                    alert -> Void in
+                })
+                alertController.addAction(submitAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func errorAccessingCoreData(error: Error) {
+        let alertController = UIAlertController(title: "Error", message: "There was an error retrieving your notes: \(error)", preferredStyle: UIAlertControllerStyle.alert)
+        let submitAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: {
+            alert -> Void in
+        })
+        alertController.addAction(submitAction)
+        self.present(alertController, animated: true, completion: nil)
+
+    }
 }
